@@ -1,0 +1,1709 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.header {
+  padding: 28px 48px;
+  background: #ffffff;
+  border-bottom: 1px solid #d1d5db;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.header h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 32px;
+  letter-spacing: 3px;
+}
+
+.header p {
+  margin: 8px 0 0;
+  color: #6b7280;
+}
+
+.main {
+  max-width: 1120px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 60px 32px;
+  box-sizing: border-box;
+}
+
+.main h2 {
+  margin-bottom: 16px;
+  color: #111827;
+  font-size: 36px;
+}
+
+.main p {
+  margin-bottom: 32px;
+  color: #4b5563;
+  font-size: 18px;
+}
+
+.main button {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 8px;
+  background: #dc2626;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.main button:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+}
+
+.navigation {
+  display: flex;
+  gap: 8px;
+  padding: 16px 48px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.navigation a {
+  padding: 10px 16px;
+  border-radius: 6px;
+  color: #374151;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.navigation a:hover {
+  background: #f3f4f6;
+  color: #dc2626;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.page-header h2 {
+  margin: 0;
+}
+
+.page-header p {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.primary-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #dc2626;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.primary-button:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.table-container {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table thead {
+  background: #f9fafb;
+}
+
+.data-table th {
+  padding: 16px 20px;
+  text-align: left;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-table td {
+  padding: 18px 20px;
+  border-top: 1px solid #e5e7eb;
+  color: #374151;
+  font-size: 15px;
+}
+
+.data-table tbody tr {
+  transition: 0.15s;
+}
+
+.data-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.name-cell {
+  color: #111827 !important;
+  font-weight: 600;
+}
+
+.status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.data-table th:nth-child(3),
+.data-table td:nth-child(3) {
+  min-width: 150px;
+  white-space: nowrap;
+}
+
+.data-table th:nth-child(5),
+.data-table td:nth-child(5) {
+  min-width: 160px;
+  white-space: nowrap;
+}
+
+.form-container {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-group input {
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.form-group input:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.secondary-button {
+  padding: 12px 20px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondary-button:hover {
+  background: #f9fafb;
+}
+
+/* ================================
+   BLACKBELT - FORMULÁRIO DE ALUNO
+   ================================ */
+
+.form-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 36px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  color: #1f2937;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.form-group input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #f9fafb;
+  color: #111827;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.form-group input::placeholder {
+  color: #9ca3af;
+}
+
+.form-group input:hover {
+  border-color: #9ca3af;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #dc2626;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.secondary-button {
+  padding: 12px 22px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondary-button:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.form-actions .primary-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  background: #dc2626;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.2);
+  transition: all 0.2s ease;
+}
+
+.form-actions .primary-button:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(220, 38, 38, 0.25);
+}
+
+.form-actions .primary-button:active {
+  transform: translateY(0);
+}
+
+/* Responsividade */
+
+@media (max-width: 768px) {
+  .form-container {
+    padding: 24px;
+  }
+
+  .form-container .form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .form-container .form-group label {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    text-align: left;
+    align-self: flex-start;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.full-width {
+    grid-column: auto;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+
+  .form-group label {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    text-align: left;
+    color: #1f2937;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .form-container .form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .form-container .form-group label {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    text-align: left !important;
+    align-self: flex-start;
+  }
+
+  .page-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .page-header > div {
+    width: 100%;
+    text-align: center;
+  }
+
+  .page-header h2,
+  .page-header p {
+    text-align: center;
+  }
+
+  .main .page-header {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  .main .page-header > div {
+    width: 100%;
+    text-align: center;
+  }
+
+  .main .page-header h2,
+  .main .page-header p {
+    text-align: center;
+  }
+}
+
+.form-section-title {
+  grid-column: 1 / -1;
+  margin-top: 12px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.form-section-title h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 20px;
+  text-align: left;
+}
+
+.form-section-title p {
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+  text-align: left;
+}
+
+.form-message {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.error-message {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.success-message {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+/* ================================
+   COLUNA DE AÇÕES
+================================ */
+
+/* ================================
+   TABELA DE ALUNOS
+================================ */
+
+.table-container {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.data-table th,
+.data-table td {
+  white-space: nowrap;
+}
+
+.data-table th {
+  padding: 14px 12px;
+}
+
+.data-table td {
+  padding: 14px 12px;
+}
+
+/* Nome pode ocupar o espaço disponível */
+.data-table th:nth-child(2),
+.data-table td:nth-child(2) {
+  width: auto;
+}
+
+/* CPF */
+.data-table th:nth-child(3),
+.data-table td:nth-child(3) {
+  min-width: 150px;
+}
+
+/* Data de nascimento */
+.data-table th:nth-child(4),
+.data-table td:nth-child(4) {
+  min-width: 140px;
+}
+
+/* Telefone */
+.data-table th:nth-child(5),
+.data-table td:nth-child(5) {
+  min-width: 150px;
+}
+
+/* Status */
+.data-table th:nth-child(6),
+.data-table td:nth-child(6) {
+  min-width: 90px;
+}
+
+/* Ações */
+.data-table th:last-child,
+.data-table td:last-child {
+  width: 100px;
+  min-width: 100px;
+  padding-left: 8px;
+  padding-right: 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ================================
+   BOTÕES DE AÇÃO DA TABELA
+================================ */
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.data-table .edit-button,
+.data-table .delete-button {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  max-width: 38px !important;
+  padding: 0 !important;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* EDITAR */
+.data-table .edit-button {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.data-table .edit-button:hover {
+  background: #f3f4f6;
+}
+
+/* EXCLUIR */
+.data-table .delete-button {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+  transition: all 0.2s ease;
+}
+
+.data-table .delete-button:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+/* ÍCONES */
+.data-table .edit-button svg,
+.data-table .delete-button svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Botão Excluir */
+.data-table .delete-button {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  margin: 0 0 0 8px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  background: #fef2f2;
+  color: #b91c1c;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.data-table .delete-button:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.data-table .delete-button svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Botão Excluir */
+.data-table .delete-button {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  margin: 0 0 0 8px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dc2626;
+  border-radius: 8px;
+
+  background: #dc2626;
+  color: #ffffff;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.data-table .delete-button:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.data-table .delete-button svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ================================
+   TABELA DE PRESENÇAS
+================================ */
+
+.presencas-table th,
+.presencas-table td {
+  white-space: nowrap;
+}
+
+.presencas-table th:nth-child(6),
+.presencas-table td:nth-child(6) {
+  width: 100%;
+  max-width: 300px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.presencas-table th:last-child,
+.presencas-table td:last-child {
+  width: 100px;
+  min-width: 100px;
+  padding-left: 8px;
+  padding-right: 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.presencas-table .action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.presencas-table .edit-button,
+.presencas-table .btn-delete {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.presencas-table .edit-button svg,
+.presencas-table .btn-delete svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.presencas-table .edit-button {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+  cursor: pointer;
+}
+
+.presencas-table .edit-button:hover {
+  background: #f3f4f6;
+}
+
+.presencas-table .btn-delete {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #dc2626;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.presencas-table .btn-delete:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+/* ================================
+   FORMULÁRIO DE PRESENÇA
+================================ */
+
+.form-container select,
+.form-container textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #f9fafb;
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.form-container select {
+  cursor: pointer;
+}
+
+.form-container textarea {
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.form-container select:hover,
+.form-container textarea:hover {
+  border-color: #9ca3af;
+}
+
+.form-container select:focus,
+.form-container textarea:focus {
+  outline: none;
+  border-color: #dc2626;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+.form-container select:disabled,
+.form-container input:disabled,
+.form-container textarea:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.character-counter {
+  margin-top: 6px;
+  color: #9ca3af;
+  font-size: 12px;
+  text-align: right;
+}
+
+/* ================================
+   AÇÕES DAS TABELAS - PADRÃO
+================================ */
+
+.data-table .action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.data-table .action-buttons .edit-button,
+.data-table .action-buttons .btn-delete {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  margin: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  border-radius: 8px;
+
+  cursor: pointer;
+}
+
+.data-table .action-buttons .edit-button {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+}
+
+.data-table .action-buttons .edit-button:hover {
+  background: #f3f4f6;
+}
+
+.data-table .action-buttons .btn-delete {
+  border: 1px solid #fca5a5;
+  background: #dc2626;
+  color: #ffffff;
+
+  transition: all 0.2s ease;
+}
+
+.data-table .action-buttons .btn-delete:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.data-table .action-buttons svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ================================
+   MODAL DE CONFIRMAÇÃO
+================================ */
+
+.confirm-modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(17, 24, 39, 0.55);
+
+  z-index: 1000;
+
+  padding: 20px;
+}
+
+.confirm-modal {
+  width: 100%;
+  max-width: 420px;
+
+  background: #ffffff;
+
+  border-radius: 16px;
+
+  padding: 32px;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+
+  text-align: center;
+
+  animation: confirmModalEntrada 0.2s ease-out;
+}
+
+.confirm-modal-icon {
+  width: 52px;
+  height: 52px;
+
+  margin: 0 auto 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fee2e2;
+
+  font-size: 24px;
+}
+
+.confirm-modal h3 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.confirm-modal p {
+  margin: 12px 0 28px;
+
+  color: #6b7280;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.confirm-modal-actions {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 12px;
+}
+
+.confirm-modal-actions .secondary-button,
+.confirm-delete-button {
+  min-width: 110px;
+  height: 40px;
+
+  padding: 0 18px;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+}
+
+.confirm-modal-actions .secondary-button {
+  border: 1px solid #d1d5db;
+
+  background: #ffffff;
+
+  color: #374151;
+}
+
+.confirm-modal-actions .secondary-button:hover {
+  background: #f3f4f6;
+}
+
+.confirm-delete-button {
+  border: 1px solid #dc2626;
+
+  background: #dc2626;
+
+  color: #ffffff;
+
+  transition: all 0.2s ease;
+}
+
+.confirm-delete-button:hover {
+  background: #b91c1c;
+
+  border-color: #b91c1c;
+}
+
+.confirm-modal-actions button:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+@keyframes confirmModalEntrada {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ================================
+   AÇÕES DA TABELA DE TURMAS
+================================ */
+
+.data-table .action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.data-table .action-buttons .edit-button,
+.data-table .action-buttons .btn-delete {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  max-width: 38px;
+
+  padding: 0;
+  margin: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  border-radius: 8px;
+
+  cursor: pointer;
+}
+
+/* EDITAR */
+
+.data-table .action-buttons .edit-button {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+}
+
+.data-table .action-buttons .edit-button:hover {
+  background: #f3f4f6;
+}
+
+/* EXCLUIR */
+
+.data-table .action-buttons .btn-delete {
+  border: 1px solid #fca5a5;
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.data-table .action-buttons .btn-delete:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* ÍCONES */
+
+.data-table .action-buttons svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ================================
+   TABELA DE TURMAS
+================================ */
+
+.turmas-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.turmas-table th,
+.turmas-table td {
+  padding: 12px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ID */
+.turmas-table th:nth-child(1),
+.turmas-table td:nth-child(1) {
+  width: 5%;
+}
+
+/* Nome */
+.turmas-table th:nth-child(2),
+.turmas-table td:nth-child(2) {
+  width: 16%;
+}
+
+/* Professor */
+.turmas-table th:nth-child(3),
+.turmas-table td:nth-child(3) {
+  width: 16%;
+}
+
+/* Modalidade */
+.turmas-table th:nth-child(4),
+.turmas-table td:nth-child(4) {
+  width: 14%;
+}
+
+/* Dias */
+.turmas-table th:nth-child(5),
+.turmas-table td:nth-child(5) {
+  width: 12%;
+}
+
+/* Horário */
+.turmas-table th:nth-child(6),
+.turmas-table td:nth-child(6) {
+  width: 12%;
+}
+
+/* Capacidade */
+.turmas-table th:nth-child(7),
+.turmas-table td:nth-child(7) {
+  width: 8%;
+  text-align: center;
+}
+
+/* Situação */
+.turmas-table th:nth-child(8),
+.turmas-table td:nth-child(8) {
+  width: 9%;
+  text-align: center;
+}
+
+/* Ações */
+.turmas-table th:nth-child(9),
+.turmas-table td:nth-child(9) {
+  width: 8%;
+  min-width: 90px;
+  text-align: center;
+  overflow: visible;
+}
+
+/* Botões */
+
+.turmas-table .action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.turmas-table .action-buttons button {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  padding: 0;
+  margin: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.turmas-table .edit-button {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+}
+
+.turmas-table .edit-button:hover {
+  background: #f3f4f6;
+}
+
+.turmas-table .btn-delete {
+  border: 1px solid #dc2626;
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.turmas-table .btn-delete:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.turmas-table .action-buttons svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* ================================
+   TABELA DE PROFESSORES
+================================ */
+
+.professores-table th,
+.professores-table td {
+  white-space: nowrap;
+}
+
+.professores-table th:last-child,
+.professores-table td:last-child {
+  width: 100px;
+  min-width: 100px;
+  padding-left: 8px;
+  padding-right: 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.professores-table .action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+/* ================================
+   TABELA DE PROFESSORES
+================================ */
+
+.professores-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.professores-table th,
+.professores-table td {
+  padding: 12px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ID */
+.professores-table th:nth-child(1),
+.professores-table td:nth-child(1) {
+  width: 45px;
+}
+
+/* Nome */
+.professores-table th:nth-child(2),
+.professores-table td:nth-child(2) {
+  width: 150px;
+}
+
+/* CPF */
+.professores-table th:nth-child(3),
+.professores-table td:nth-child(3) {
+  width: 125px;
+}
+
+/* Telefone */
+.professores-table th:nth-child(4),
+.professores-table td:nth-child(4) {
+  width: 120px;
+}
+
+/* E-mail */
+.professores-table th:nth-child(5),
+.professores-table td:nth-child(5) {
+  width: 160px;
+}
+
+/* Contratação */
+.professores-table th:nth-child(6),
+.professores-table td:nth-child(6) {
+  width: 105px;
+}
+
+/* Hora/aula */
+.professores-table th:nth-child(7),
+.professores-table td:nth-child(7) {
+  width: 95px;
+}
+
+/* Status */
+.professores-table th:nth-child(8),
+.professores-table td:nth-child(8) {
+  width: 80px;
+}
+
+/* Ações */
+.professores-table th:nth-child(9),
+.professores-table td:nth-child(9) {
+  width: 100px;
+  min-width: 100px;
+  text-align: center;
+  padding: 8px 4px;
+}
+
+/* Botões */
+.professores-table .action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.professores-table .edit-button,
+.professores-table .btn-delete {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  margin: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.pagination-button {
+  padding: 6px 12px;
+  font-size: 14px;
+  min-width: 90px;
+}
+
+.pagination span {
+  font-size: 14px;
+}
+
+/* ================================
+   LOGIN - BLACKBELT
+================================ */
+
+.login-container {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 32px;
+
+  background: radial-gradient(
+    circle at top,
+    #374151 0%,
+    #111827 45%,
+    #030712 100%
+  );
+}
+
+.login-form {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 42px;
+
+  background: #ffffff;
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+
+  text-align: center;
+}
+
+.login-form h1 {
+  margin: 0;
+
+  color: #dc2626;
+
+  font-size: 34px;
+  font-weight: 800;
+
+  letter-spacing: 5px;
+}
+
+.login-form h2 {
+  margin: 8px 0 32px;
+
+  color: #374151;
+
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.login-form input {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-bottom: 16px;
+  padding: 14px 16px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+
+  background: #f9fafb;
+
+  color: #111827;
+
+  font-size: 15px;
+
+  outline: none;
+
+  transition: all 0.2s ease;
+}
+
+.login-form input::placeholder {
+  color: #9ca3af;
+}
+
+.login-form input:hover {
+  border-color: #9ca3af;
+}
+
+.login-form input:focus {
+  border-color: #dc2626;
+
+  background: #ffffff;
+
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+.login-form button {
+  width: 100%;
+
+  margin-top: 8px;
+  padding: 14px 20px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #dc2626;
+  color: #ffffff;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.login-form button:hover {
+  background: #b91c1c;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 6px 14px rgba(220, 38, 38, 0.25);
+}
+
+.login-form button:active {
+  transform: translateY(0);
+}
+
+.login-error {
+  margin: 4px 0 16px;
+
+  padding: 12px 14px;
+
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  background: #fef2f2;
+  color: #b91c1c;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* LOGIN - RESPONSIVO */
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 20px;
+  }
+
+  .login-form {
+    padding: 32px 24px;
+    border-radius: 16px;
+  }
+
+  .login-form h1 {
+    font-size: 30px;
+  }
+}
+
+/* Botão Sair da navegação */
+
+.navigation button {
+  margin-left: auto;
+
+  padding: 8px 18px;
+
+  border: 1px solid #dc2626;
+  border-radius: 8px;
+
+  background: #dc2626;
+  color: #ffffff !important;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.navigation button:hover {
+  background: #b91c1c;
+  color: #ffffff !important;
+
+  transform: translateY(-1px);
+}
+
+.navigation button:active {
+  transform: translateY(0);
+}
+
+/* ================================
+   PERFIL - PERMISSÕES
+   ================================ */
+
+.permissions-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.permission-group {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.permission-group-header {
+  padding: 12px 16px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
+
+.permission-group-header strong {
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.permission-group-items {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 16px;
+}
+
+.permission-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 14px;
+
+  border: 1px solid #ddd;
+  border-radius: 6px;
+
+  background: #fafafa;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.permission-item:hover {
+  background: #f1f1f1;
+  border-color: #bbb;
+}
+
+.permission-item input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.permission-item span {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+@media (max-width: 800px) {
+  .permission-group-items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 500px) {
+  .permission-group-items {
+    grid-template-columns: 1fr;
+  }
+}
+
+.select-all-permissions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.select-all-permissions input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+
+  cursor: pointer;
+}
+
+.confirm-modal .secondary-button {
+  background: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
