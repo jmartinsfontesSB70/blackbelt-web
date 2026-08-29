@@ -5,6 +5,7 @@ import {
   cadastrarUsuario,
   buscarUsuarioPorId,
   atualizarUsuario,
+  alterarSenhaUsuario,
 } from "../services/usuarioService";
 
 import { listarPerfis } from "../services/perfilService";
@@ -24,6 +25,9 @@ function UsuarioForm() {
   const [carregando, setCarregando] = useState(modoEdicao);
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
+  const [sucesso, setSucesso] = useState("");
+
+  const ehAdmin = modoEdicao && username.trim().toLowerCase() === "admin";
 
   useEffect(() => {
     carregarDados();
@@ -33,6 +37,7 @@ function UsuarioForm() {
     try {
       setCarregando(true);
       setErro("");
+      setSucesso("");
 
       const listaPerfis = await listarPerfis();
 
@@ -56,6 +61,12 @@ function UsuarioForm() {
     event.preventDefault();
 
     setErro("");
+    setSucesso("");
+
+    if (ehAdmin) {
+      await handleAlterarSenha();
+      return;
+    }
 
     if (!username.trim()) {
       setErro("Informe o nome do usuário.");
@@ -81,10 +92,6 @@ function UsuarioForm() {
         perfilId: Number(perfilId),
       };
 
-      if (password.trim()) {
-        usuario.password = password;
-      }
-
       if (modoEdicao) {
         await atualizarUsuario(id, usuario);
       } else {
@@ -102,31 +109,59 @@ function UsuarioForm() {
     }
   }
 
+  async function handleAlterarSenha() {
+    if (!password.trim()) {
+      setErro("Informe a nova senha.");
+      return;
+    }
+
+    if (password.trim().length < 6) {
+      setErro("A senha deve possuir pelo menos 6 caracteres.");
+      return;
+    }
+
+    try {
+      setSalvando(true);
+
+      await alterarSenhaUsuario(id, password.trim());
+
+      setPassword("");
+      setSucesso("Senha do usuário admin alterada com sucesso.");
+    } catch (error) {
+      setErro(error.message);
+    } finally {
+      setSalvando(false);
+    }
+  }
+
   if (carregando) {
     return (
       <main className="main">
-        <h2>{modoEdicao ? "Editar usuário" : "Novo usuário"}</h2>
-        <p>Carregando...</p>
+        {" "}
+        <h2>Editar usuário</h2> <p>Carregando...</p>{" "}
       </main>
     );
   }
 
   return (
     <main className="main">
+      {" "}
       <div className="page-header">
+        {" "}
         <div>
+          {" "}
           <h2>{modoEdicao ? "Editar usuário" : "Novo usuário"}</h2>
-
           <p>
-            {modoEdicao
-              ? "Altere os dados do usuário."
-              : "Cadastre um novo usuário do sistema."}
+            {ehAdmin
+              ? "O usuário admin é protegido. Apenas a senha pode ser alterada."
+              : modoEdicao
+                ? "Altere os dados do usuário."
+                : "Cadastre um novo usuário do sistema."}
           </p>
         </div>
       </div>
-
       {erro && <div className="form-message error-message">{erro}</div>}
-
+      {sucesso && <div className="form-message success-message">{sucesso}</div>}
       <form className="form-container" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="username">Usuário</label>
@@ -137,14 +172,14 @@ function UsuarioForm() {
             value={username}
             onChange={(event) => setUsername(event.target.value)}
             maxLength={50}
-            disabled={salvando}
+            disabled={salvando || ehAdmin}
           />
         </div>
 
         <div className="form-group">
           <label htmlFor="password">
-            Senha
-            {modoEdicao && " (deixe em branco para manter a atual)"}
+            {ehAdmin ? "Nova senha" : "Senha"}
+            {modoEdicao && !ehAdmin && " (deixe em branco para manter a atual)"}
           </label>
 
           <input
@@ -152,8 +187,13 @@ function UsuarioForm() {
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            minLength={6}
             disabled={salvando}
           />
+
+          {ehAdmin && (
+            <small>Informe uma nova senha com pelo menos 6 caracteres.</small>
+          )}
         </div>
 
         <div className="form-group">
@@ -163,7 +203,7 @@ function UsuarioForm() {
             id="perfilId"
             value={perfilId}
             onChange={(event) => setPerfilId(event.target.value)}
-            disabled={salvando}
+            disabled={salvando || ehAdmin}
           >
             <option value="">Selecione um perfil</option>
 
@@ -182,7 +222,7 @@ function UsuarioForm() {
             id="ativo"
             value={ativo ? "true" : "false"}
             onChange={(event) => setAtivo(event.target.value === "true")}
-            disabled={salvando}
+            disabled={salvando || ehAdmin}
           >
             <option value="true">Ativo</option>
             <option value="false">Inativo</option>
@@ -200,7 +240,13 @@ function UsuarioForm() {
           </button>
 
           <button type="submit" className="primary-button" disabled={salvando}>
-            {salvando ? "Salvando..." : "Salvar"}
+            {salvando
+              ? ehAdmin
+                ? "Alterando senha..."
+                : "Salvando..."
+              : ehAdmin
+                ? "Alterar senha"
+                : "Salvar"}
           </button>
         </div>
       </form>

@@ -31,6 +31,7 @@ import Usuarios from "./pages/Usuarios";
 import UsuarioForm from "./pages/UsuarioForm";
 import Perfis from "./pages/Perfis";
 import PerfilForm from "./pages/PerfilForm";
+import AlterarSenha from "./pages/AlterarSenha";
 
 function LayoutPrivado() {
   return (
@@ -159,6 +160,8 @@ function App() {
             <Route element={<RotaPermissao nome="PERFIL_EDITAR" />}>
               <Route path="/perfis/:id" element={<PerfilForm />} />
             </Route>
+
+            <Route path="/alterar-senha" element={<AlterarSenha />} />
           </Route>
         </Route>
       </Routes>

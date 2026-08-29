@@ -55,6 +55,8 @@ function Navigation() {
           <Link to="/perfis">Perfis</Link>
         </Permissao>
 
+        <Link to="/alterar-senha">Alterar senha</Link>
+
         <button type="button" onClick={abrirModalSair}>
           Sair
         </button>
