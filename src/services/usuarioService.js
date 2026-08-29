@@ -24,6 +24,25 @@ export async function atualizarUsuario(id, usuario) {
   });
 }
 
+export async function alterarSenhaUsuario(id, novaSenha) {
+  return await apiFetch(`${API_URL}/${id}/senha`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      novaSenha,
+    }),
+  });
+}
+
+export async function alterarMinhaSenha(senhaAtual, novaSenha) {
+  return await apiFetch(`${API_URL}/minha-senha`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      senhaAtual,
+      novaSenha,
+    }),
+  });
+}
+
 export async function excluirUsuario(id) {
   return await apiFetch(`${API_URL}/${id}`, {
     method: "DELETE",

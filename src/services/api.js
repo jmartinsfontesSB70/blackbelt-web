@@ -32,7 +32,23 @@ export async function apiFetch(endpoint, options = {}) {
   }
 
   if (!response.ok) {
-    throw new Error(`Erro na comunicação com a API (${response.status}).`);
+    let mensagem = `Erro na comunicação com a API (${response.status}).`;
+
+    try {
+      const erro = await response.json();
+
+      if (erro.mensagem) {
+        mensagem = erro.mensagem;
+      } else if (erro.message) {
+        mensagem = erro.message;
+      } else if (erro.detail) {
+        mensagem = erro.detail;
+      }
+    } catch {
+      // Resposta sem JSON: mantém a mensagem padrão.
+    }
+
+    throw new Error(mensagem);
   }
 
   if (response.status === 204) {
