@@ -76,6 +76,10 @@ function Perfis() {
     setPerfilSelecionado(null);
   }
 
+  function perfilAdmin(perfil) {
+    return perfil.nome?.trim().toLowerCase() === "admin";
+  }
+
   if (carregando) {
     return (
       <main className="main">
@@ -138,27 +142,31 @@ function Perfis() {
 
                 <td>
                   <div className="action-buttons">
-                    <Permissao nome="PERFIL_EDITAR">
-                      <button
-                        type="button"
-                        className="edit-button"
-                        onClick={() => navigate("/perfis/" + perfil.id)}
-                        title="Editar perfil"
-                      >
-                        <Pencil size={18} />
-                      </button>
-                    </Permissao>
+                    {!perfilAdmin(perfil) && (
+                      <>
+                        <Permissao nome="PERFIL_EDITAR">
+                          <button
+                            type="button"
+                            className="edit-button"
+                            onClick={() => navigate("/perfis/" + perfil.id)}
+                            title="Editar perfil"
+                          >
+                            <Pencil size={18} />
+                          </button>
+                        </Permissao>
 
-                    <Permissao nome="PERFIL_EXCLUIR">
-                      <button
-                        type="button"
-                        className="btn-delete"
-                        onClick={() => handleExcluir(perfil)}
-                        title="Excluir perfil"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </Permissao>
+                        <Permissao nome="PERFIL_EXCLUIR">
+                          <button
+                            type="button"
+                            className="btn-delete"
+                            onClick={() => handleExcluir(perfil)}
+                            title="Excluir perfil"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </Permissao>
+                      </>
+                    )}
                   </div>
                 </td>
               </tr>

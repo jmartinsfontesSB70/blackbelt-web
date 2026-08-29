@@ -43,6 +43,8 @@ function PerfilForm() {
 
   const gruposPermissoes = agruparPermissoes(permissoes);
 
+  const perfilAdmin = modoEdicao && nome.trim().toLowerCase() === "admin";
+
   useEffect(() => {
     carregarDados();
   }, [id]);
@@ -73,6 +75,10 @@ function PerfilForm() {
   }
 
   function alternarPermissao(permissaoId) {
+    if (perfilAdmin) {
+      return;
+    }
+
     setPermissoesSelecionadas((selecionadas) => {
       if (selecionadas.includes(permissaoId)) {
         return selecionadas.filter((id) => id !== permissaoId);
@@ -83,6 +89,10 @@ function PerfilForm() {
   }
 
   function alternarTodasDoModulo(permissoesDoModulo) {
+    if (perfilAdmin) {
+      return;
+    }
+
     const ids = permissoesDoModulo.map((permissao) => permissao.id);
 
     const todasSelecionadas = ids.every((id) =>
@@ -102,6 +112,11 @@ function PerfilForm() {
     event.preventDefault();
 
     setErro("");
+
+    if (perfilAdmin) {
+      setErro("O perfil admin é protegido e não pode ser alterado.");
+      return;
+    }
 
     if (!nome.trim()) {
       setErro("Informe o nome do perfil.");
@@ -153,6 +168,12 @@ function PerfilForm() {
         </div>
       </div>
 
+      {perfilAdmin && (
+        <div className="form-message error-message">
+          O perfil admin é protegido e não pode ser alterado.
+        </div>
+      )}
+
       {erro && <div className="form-message error-message">{erro}</div>}
 
       <form className="form-container" onSubmit={handleSubmit}>
@@ -164,7 +185,7 @@ function PerfilForm() {
             type="text"
             value={nome}
             onChange={(event) => setNome(event.target.value)}
-            disabled={salvando}
+            disabled={salvando || perfilAdmin}
           />
         </div>
 
@@ -187,7 +208,7 @@ function PerfilForm() {
                         onChange={() =>
                           alternarTodasDoModulo(permissoesDoModulo)
                         }
-                        disabled={salvando}
+                        disabled={salvando || perfilAdmin}
                       />
 
                       <span>Selecionar todas</span>
@@ -208,7 +229,7 @@ function PerfilForm() {
                               permissao.id,
                             )}
                             onChange={() => alternarPermissao(permissao.id)}
-                            disabled={salvando}
+                            disabled={salvando || perfilAdmin}
                           />
 
                           <span>{acao}</span>
@@ -229,12 +250,18 @@ function PerfilForm() {
             onClick={() => navigate("/perfis")}
             disabled={salvando}
           >
-            Cancelar
+            Voltar
           </button>
 
-          <button type="submit" className="primary-button" disabled={salvando}>
-            {salvando ? "Salvando..." : "Salvar"}
-          </button>
+          {!perfilAdmin && (
+            <button
+              type="submit"
+              className="primary-button"
+              disabled={salvando}
+            >
+              {salvando ? "Salvando..." : "Salvar"}
+            </button>
+          )}
         </div>
       </form>
     </main>
