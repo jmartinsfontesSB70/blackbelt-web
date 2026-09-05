@@ -1707,3 +1707,447 @@ body {
   color: #374151;
   border: 1px solid #d1d5db;
 }
+
+/* =========================================================
+   CHAMADA
+   ========================================================= */
+
+.chamada-page {
+  padding-top: 48px;
+}
+
+.chamada-page-header {
+  margin-bottom: 28px;
+}
+
+.chamada-page-header h2 {
+  font-size: 34px;
+  letter-spacing: -0.5px;
+}
+
+.chamada-container {
+  max-width: 1100px;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------
+   SEÇÃO DE FILTROS
+   --------------------------------------------------------- */
+
+.chamada-filtros {
+  padding: 30px 34px 34px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.chamada-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.chamada-section-heading h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 19px;
+}
+
+.chamada-section-heading p {
+  margin: 5px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.chamada-section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.chamada-filtros-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+/* ---------------------------------------------------------
+   SEÇÃO DOS ALUNOS
+   --------------------------------------------------------- */
+
+.chamada-alunos-section {
+  padding: 30px 34px 34px;
+}
+
+.chamada-alunos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 30px;
+  margin-bottom: 24px;
+}
+
+.chamada-section-heading-alunos {
+  margin-bottom: 0;
+}
+
+.chamada-resumo {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f9fafb;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.chamada-resumo-item {
+  min-width: 82px;
+  padding: 10px 14px;
+  text-align: center;
+  border-left: 1px solid #e5e7eb;
+}
+
+.chamada-resumo-item:first-child {
+  border-left: none;
+}
+
+.chamada-resumo-item strong {
+  display: block;
+  color: #111827;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.chamada-resumo-item span {
+  display: block;
+  margin-top: 5px;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.chamada-resumo-item.presente strong {
+  color: #15803d;
+}
+
+.chamada-resumo-item.ausente strong {
+  color: #b91c1c;
+}
+
+/* ---------------------------------------------------------
+   AÇÕES DA LISTA
+   --------------------------------------------------------- */
+
+.chamada-list-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.chamada-action-button {
+  padding: 8px 13px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  color: #374151 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chamada-action-button:hover {
+  background: #f9fafb !important;
+  border-color: #9ca3af !important;
+  transform: none !important;
+}
+
+.chamada-action-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------------------------------------------------------
+   LISTA DE ALUNOS
+   --------------------------------------------------------- */
+
+.chamada-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chamada-aluno {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 68px;
+  padding: 10px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.chamada-aluno:hover {
+  border-color: #d1d5db;
+  background: #f9fafb;
+  transform: translateY(-1px);
+}
+
+.chamada-aluno.presente {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
+.chamada-aluno input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chamada-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #d1d5db;
+  border-radius: 7px;
+  background: #ffffff;
+  transition: all 0.18s ease;
+}
+
+.chamada-aluno.presente .chamada-checkbox {
+  border-color: #16a34a;
+  background: #16a34a;
+}
+
+.chamada-aluno.presente .chamada-checkbox::after {
+  content: "✓";
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.chamada-aluno-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.chamada-aluno-info strong {
+  overflow: hidden;
+  color: #111827;
+  font-size: 15px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chamada-aluno-info small {
+  margin-top: 3px;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.chamada-aluno.presente .chamada-aluno-info small {
+  color: #15803d;
+}
+
+.chamada-status {
+  flex-shrink: 0;
+  min-width: 76px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.chamada-status.presente {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.chamada-status.ausente {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+/* ---------------------------------------------------------
+   LISTA VAZIA / LOADING
+   --------------------------------------------------------- */
+
+.chamada-vazia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  padding: 30px;
+  border: 1px dashed #d1d5db;
+  border-radius: 12px;
+  background: #f9fafb;
+  text-align: center;
+}
+
+.chamada-vazia strong {
+  color: #374151;
+  font-size: 15px;
+}
+
+.chamada-vazia span {
+  margin-top: 6px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.chamada-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 220px;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.chamada-loading-lista {
+  min-height: 140px;
+}
+
+.chamada-loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #dc2626;
+  border-radius: 50%;
+  animation: chamada-spin 0.8s linear infinite;
+}
+
+@keyframes chamada-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------------------------------------------------------
+   RODAPÉ DA CHAMADA
+   --------------------------------------------------------- */
+
+.chamada-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 0;
+  padding: 24px 34px 30px;
+  border-top: 1px solid #e5e7eb;
+  background: #fafafa;
+}
+
+.chamada-cancelar,
+.chamada-salvar {
+  min-width: 150px;
+}
+
+/* ---------------------------------------------------------
+   RESPONSIVO
+   --------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .chamada-page {
+    padding-top: 32px;
+  }
+
+  .chamada-container {
+    border-radius: 14px;
+  }
+
+  .chamada-filtros,
+  .chamada-alunos-section {
+    padding: 24px 20px;
+  }
+
+  .chamada-filtros-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .chamada-alunos-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .chamada-resumo {
+    width: 100%;
+  }
+
+  .chamada-resumo-item {
+    flex: 1;
+  }
+
+  .chamada-aluno {
+    min-height: 64px;
+    padding: 9px 12px;
+  }
+
+  .chamada-status {
+    min-width: 70px;
+  }
+
+  .chamada-form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    padding: 20px;
+  }
+
+  .chamada-cancelar,
+  .chamada-salvar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .chamada-section-heading {
+    align-items: flex-start;
+  }
+
+  .chamada-section-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .chamada-status {
+    display: none;
+  }
+
+  .chamada-aluno-info strong {
+    font-size: 14px;
+  }
+
+  .chamada-list-actions {
+    width: 100%;
+  }
+
+  .chamada-action-button {
+    flex: 1;
+  }
+}

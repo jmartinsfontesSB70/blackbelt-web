@@ -133,14 +133,23 @@ function Presencas() {
           <p>Controle de presença dos alunos nas aulas.</p>
         </div>
 
-        <Permissao nome="PRESENCA_CRIAR">
-          <button
-            className="primary-button"
-            onClick={() => navigate("/presencas/nova")}
-          >
-            + Nova presença
-          </button>
-        </Permissao>
+        <div className="action-buttons">
+          <Permissao nome="PRESENCA_CRIAR">
+            <button
+              className="primary-button"
+              onClick={() => navigate("/presencas/chamada")}
+            >
+              + Nova chamada
+            </button>
+
+            <button
+              className="primary-button"
+              onClick={() => navigate("/presencas/nova")}
+            >
+              + Nova presença
+            </button>
+          </Permissao>
+        </div>
       </div>
 
       {erro && <div className="form-message error-message">{erro}</div>}

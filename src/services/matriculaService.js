@@ -20,6 +20,10 @@ export async function listarMatriculasParaSelecao() {
   return matriculas;
 }
 
+export async function listarMatriculasAtivasPorTurma(turmaId, data) {
+  return await apiFetch(`${API_URL}/turma/${turmaId}/ativas?data=${data}`);
+}
+
 export async function cadastrarMatricula(matricula) {
   return await apiFetch(API_URL, {
     method: "POST",

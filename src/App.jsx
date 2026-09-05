@@ -32,6 +32,7 @@ import UsuarioForm from "./pages/UsuarioForm";
 import Perfis from "./pages/Perfis";
 import PerfilForm from "./pages/PerfilForm";
 import AlterarSenha from "./pages/AlterarSenha";
+import ChamadaForm from "./pages/ChamadaForm";
 
 function LayoutPrivado() {
   return (
@@ -77,6 +78,10 @@ function App() {
 
             <Route element={<RotaPermissao nome="PRESENCA_CRIAR" />}>
               <Route path="/presencas/nova" element={<PresencaForm />} />
+            </Route>
+
+            <Route element={<RotaPermissao nome="PRESENCA_CRIAR" />}>
+              <Route path="/presencas/chamada" element={<ChamadaForm />} />
             </Route>
 
             <Route element={<RotaPermissao nome="PRESENCA_EDITAR" />}>

@@ -13,6 +13,17 @@ export async function cadastrarPresenca(presenca) {
   });
 }
 
+export async function registrarChamada(chamada) {
+  return await apiFetch(`${API_URL}/chamada`, {
+    method: "POST",
+    body: JSON.stringify(chamada),
+  });
+}
+
+export async function listarPresencasPorTurmaEData(turmaId, data) {
+  return await apiFetch(`${API_URL}/chamada?turmaId=${turmaId}&data=${data}`);
+}
+
 export async function buscarPresencaPorId(id) {
   return await apiFetch(`${API_URL}/${id}`);
 }
