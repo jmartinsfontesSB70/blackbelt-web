@@ -122,6 +122,7 @@ function Usuarios() {
             <tr>
               <th>ID</th>
               <th>Usuário</th>
+              <th>E-mail</th>
               <th>Perfil</th>
               <th>Status</th>
               <th>Ações</th>
@@ -134,6 +135,8 @@ function Usuarios() {
                 <td>{usuario.id}</td>
 
                 <td className="name-cell">{usuario.username}</td>
+
+                <td>{usuario.email}</td>
 
                 <td>{usuario.perfilNome}</td>
 

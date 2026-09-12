@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { useNavigate, useParams } from "react-router-dom";
 
 import {
@@ -12,16 +13,20 @@ import { listarPerfis } from "../services/perfilService";
 
 function UsuarioForm() {
   const navigate = useNavigate();
+
   const { id } = useParams();
 
   const modoEdicao = Boolean(id);
 
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [ativo, setAtivo] = useState(true);
-  const [perfilId, setPerfilId] = useState("");
 
+  const [ativo, setAtivo] = useState(true);
+
+  const [perfilId, setPerfilId] = useState("");
   const [perfis, setPerfis] = useState([]);
+
   const [carregando, setCarregando] = useState(modoEdicao);
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
@@ -47,6 +52,7 @@ function UsuarioForm() {
         const usuario = await buscarUsuarioPorId(id);
 
         setUsername(usuario.username);
+        setEmail(usuario.email || "");
         setAtivo(usuario.ativo);
         setPerfilId(String(usuario.perfilId));
       }
@@ -73,6 +79,16 @@ function UsuarioForm() {
       return;
     }
 
+    if (!email.trim()) {
+      setErro("Informe o e-mail.");
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email.trim())) {
+      setErro("Informe um e-mail válido.");
+      return;
+    }
+
     if (!modoEdicao && !password.trim()) {
       setErro("Informe a senha.");
       return;
@@ -88,6 +104,7 @@ function UsuarioForm() {
 
       const usuario = {
         username: username.trim(),
+        email: email.trim(),
         ativo,
         perfilId: Number(perfilId),
       };
@@ -100,7 +117,6 @@ function UsuarioForm() {
           password: password.trim(),
         });
       }
-
       navigate("/usuarios");
     } catch (error) {
       setErro(error.message);
@@ -122,9 +138,7 @@ function UsuarioForm() {
 
     try {
       setSalvando(true);
-
       await alterarSenhaUsuario(id, password.trim());
-
       setPassword("");
       setSucesso("Senha do usuário admin alterada com sucesso.");
     } catch (error) {
@@ -137,20 +151,18 @@ function UsuarioForm() {
   if (carregando) {
     return (
       <main className="main">
-        {" "}
-        <h2>Editar usuário</h2> <p>Carregando...</p>{" "}
+        <h2>Editar usuário</h2>
+        <p>Carregando...</p>
       </main>
     );
   }
 
   return (
     <main className="main">
-      {" "}
       <div className="page-header">
-        {" "}
         <div>
-          {" "}
           <h2>{modoEdicao ? "Editar usuário" : "Novo usuário"}</h2>
+
           <p>
             {ehAdmin
               ? "O usuário admin é protegido. Apenas a senha pode ser alterada."
@@ -160,8 +172,11 @@ function UsuarioForm() {
           </p>
         </div>
       </div>
+
       {erro && <div className="form-message error-message">{erro}</div>}
+
       {sucesso && <div className="form-message success-message">{sucesso}</div>}
+
       <form className="form-container" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="username">Usuário</label>
@@ -177,8 +192,23 @@ function UsuarioForm() {
         </div>
 
         <div className="form-group">
+          <label htmlFor="email">E-mail</label>
+
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            maxLength={150}
+            autoComplete="email"
+            disabled={salvando || ehAdmin}
+          />
+        </div>
+
+        <div className="form-group">
           <label htmlFor="password">
             {ehAdmin ? "Nova senha" : "Senha"}
+
             {modoEdicao && !ehAdmin && " (deixe em branco para manter a atual)"}
           </label>
 
@@ -225,6 +255,7 @@ function UsuarioForm() {
             disabled={salvando || ehAdmin}
           >
             <option value="true">Ativo</option>
+
             <option value="false">Inativo</option>
           </select>
         </div>

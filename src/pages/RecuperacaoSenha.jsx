@@ -1,34 +1,46 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { fazerLogin } from "../services/authService";
+import { solicitarRecuperacaoSenha } from "../services/authService";
 
-function Login() {
+function RecuperacaoSenha() {
   const [identificador, setIdentificador] = useState("");
-
-  const [password, setPassword] = useState("");
+  const [mensagem, setMensagem] = useState("");
   const [erro, setErro] = useState("");
+  const [enviando, setEnviando] = useState(false);
 
   const navigate = useNavigate();
 
   async function handleSubmit(event) {
     event.preventDefault();
 
+    setMensagem("");
     setErro("");
 
+    if (!identificador.trim()) {
+      setErro("Informe seu usuário ou e-mail.");
+      return;
+    }
+
     try {
-      const data = await fazerLogin(identificador, password);
+      setEnviando(true);
 
-      localStorage.setItem("token", data.token);
+      await solicitarRecuperacaoSenha(identificador.trim());
 
-      navigate("/dashboard");
+      setMensagem(
+        "Se o e-mail estiver cadastrado, você receberá as instruções para redefinir sua senha.",
+      );
+
+      setIdentificador("");
     } catch (error) {
       setErro(error.message);
+    } finally {
+      setEnviando(false);
     }
   }
 
-  function handleEsqueciSenha() {
-    navigate("/recuperacao-senha");
+  function voltarParaLogin() {
+    navigate("/login");
   }
 
   return (
@@ -46,12 +58,16 @@ function Login() {
 
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="login-heading">
-            <h2>Bem-vindo</h2>
-            <p>Entre para acessar o sistema</p>
+            <h2>Recuperar senha</h2>
+
+            <p>
+              Informe seu e-mail para receber as instruções de redefinição da
+              senha.
+            </p>
           </div>
 
           <div className="login-field">
-            <label htmlFor="identificador">Usuário</label>
+            <label htmlFor="identificador">Usuário ou e-mail</label>
 
             <input
               id="identificador"
@@ -60,34 +76,25 @@ function Login() {
               value={identificador}
               onChange={(event) => setIdentificador(event.target.value)}
               autoComplete="username"
-            />
-          </div>
-
-          <div className="login-field">
-            <label htmlFor="password">Senha</label>
-
-            <input
-              id="password"
-              type="password"
-              placeholder="Digite sua senha"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              autoComplete="current-password"
+              disabled={enviando}
             />
           </div>
 
           {erro && <p className="login-error">{erro}</p>}
 
-          <button type="submit" className="login-button">
-            Entrar
+          {mensagem && <p className="recovery-success">{mensagem}</p>}
+
+          <button type="submit" className="login-button" disabled={enviando}>
+            {enviando ? "Enviando..." : "Enviar instruções"}
           </button>
 
           <button
             type="button"
             className="forgot-password-button"
-            onClick={handleEsqueciSenha}
+            onClick={voltarParaLogin}
+            disabled={enviando}
           >
-            Esqueci minha senha
+            Voltar para o login
           </button>
         </form>
 
@@ -101,4 +108,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default RecuperacaoSenha;
