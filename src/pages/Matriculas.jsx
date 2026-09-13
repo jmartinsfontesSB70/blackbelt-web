@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Search } from "lucide-react";
 
 import {
   listarMatriculas,
@@ -37,12 +37,24 @@ function Matriculas() {
   const [matriculaSelecionada, setMatriculaSelecionada] = useState(null);
   const [excluindo, setExcluindo] = useState(false);
 
+  const [textoPesquisa, setTextoPesquisa] = useState("");
+  const [pesquisa, setPesquisa] = useState("");
+
+  const [sort, setSort] = useState("dataMatricula");
+  const [direction, setDirection] = useState("desc");
+
   async function carregarMatriculas() {
     try {
       setCarregando(true);
       setErro("");
 
-      const dados = await listarMatriculas(paginaAtual, 10);
+      const dados = await listarMatriculas(
+        paginaAtual,
+        10,
+        pesquisa,
+        sort,
+        direction,
+      );
 
       setMatriculas(dados.content);
       setTotalPaginas(dados.totalPages);
@@ -55,7 +67,29 @@ function Matriculas() {
 
   useEffect(() => {
     carregarMatriculas();
-  }, [paginaAtual]);
+  }, [paginaAtual, pesquisa, sort, direction]);
+
+  function executarPesquisa() {
+    setPaginaAtual(0);
+    setPesquisa(textoPesquisa);
+  }
+
+  function handlePesquisaKeyDown(event) {
+    if (event.key === "Enter") {
+      executarPesquisa();
+    }
+  }
+
+  function ordenarPor(campo) {
+    if (sort === campo) {
+      setDirection((direcaoAtual) => (direcaoAtual === "asc" ? "desc" : "asc"));
+    } else {
+      setSort(campo);
+      setDirection("asc");
+    }
+
+    setPaginaAtual(0);
+  }
 
   function handleExcluir(matricula) {
     setErro("");
@@ -144,7 +178,29 @@ function Matriculas() {
       <div className="page-header">
         <div>
           <h2>Matrículas</h2>
+
           <p>Gerencie as matrículas dos alunos nas turmas.</p>
+
+          <div className="search-container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Pesquisar aluno ou turma..."
+              value={textoPesquisa}
+              onChange={(event) => setTextoPesquisa(event.target.value)}
+              onKeyDown={handlePesquisaKeyDown}
+            />
+
+            <button
+              type="button"
+              className="search-button"
+              onClick={executarPesquisa}
+              title="Pesquisar"
+              aria-label="Pesquisar aluno ou turma"
+            >
+              <Search size={19} />
+            </button>
+          </div>
         </div>
 
         <Permissao nome="MATRICULA_CRIAR">
@@ -166,7 +222,19 @@ function Matriculas() {
               <th>ID</th>
               <th>Aluno</th>
               <th>Turma</th>
-              <th>Data matrícula</th>
+
+              <th
+                onClick={() => ordenarPor("dataMatricula")}
+                style={{ cursor: "pointer" }}
+              >
+                Data matrícula{" "}
+                {sort === "dataMatricula"
+                  ? direction === "asc"
+                    ? "↑"
+                    : "↓"
+                  : ""}
+              </th>
+
               <th>Situação</th>
               <th>Ações</th>
             </tr>
@@ -212,7 +280,7 @@ function Matriculas() {
                       <Permissao nome="MATRICULA_EXCLUIR">
                         <button
                           type="button"
-                          className="btn-action btn-delete"
+                          className="icon-button delete-button"
                           onClick={() => handleExcluir(matricula)}
                           title="Excluir matrícula"
                         >

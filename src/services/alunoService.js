@@ -2,8 +2,25 @@ import { apiFetch } from "./api";
 
 const API_URL = "/alunos";
 
-export async function listarAlunos(page = 0, size = 10) {
-  return await apiFetch(`${API_URL}?page=${page}&size=${size}`);
+export async function listarAlunos(
+  page = 0,
+  size = 10,
+  pesquisa = "",
+  sort = "id",
+  direction = "desc",
+) {
+  const params = new URLSearchParams({
+    page,
+    size,
+    sort,
+    direction,
+  });
+
+  if (pesquisa.trim()) {
+    params.append("pesquisa", pesquisa.trim());
+  }
+
+  return await apiFetch(`${API_URL}?${params.toString()}`);
 }
 
 export async function listarAlunosParaSelecao() {

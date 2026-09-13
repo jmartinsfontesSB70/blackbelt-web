@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Search } from "lucide-react";
 
 import { listarUsuarios, excluirUsuario } from "../services/usuarioService";
 
@@ -11,6 +11,8 @@ function Usuarios() {
   const navigate = useNavigate();
 
   const [usuarios, setUsuarios] = useState([]);
+  const [paginaAtual, setPaginaAtual] = useState(0);
+  const [totalPaginas, setTotalPaginas] = useState(0);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
@@ -18,14 +20,27 @@ function Usuarios() {
   const [usuarioSelecionado, setUsuarioSelecionado] = useState(null);
   const [excluindo, setExcluindo] = useState(false);
 
+  const [textoPesquisa, setTextoPesquisa] = useState("");
+  const [pesquisa, setPesquisa] = useState("");
+
+  const [sort, setSort] = useState("id");
+  const [direction, setDirection] = useState("desc");
+
   async function carregarUsuarios() {
     try {
       setCarregando(true);
       setErro("");
 
-      const dados = await listarUsuarios();
+      const dados = await listarUsuarios(
+        paginaAtual,
+        10,
+        pesquisa,
+        sort,
+        direction,
+      );
 
-      setUsuarios(dados);
+      setUsuarios(dados.content);
+      setTotalPaginas(dados.totalPages);
     } catch (error) {
       setErro(error.message);
     } finally {
@@ -35,7 +50,29 @@ function Usuarios() {
 
   useEffect(() => {
     carregarUsuarios();
-  }, []);
+  }, [paginaAtual, pesquisa, sort, direction]);
+
+  function executarPesquisa() {
+    setPaginaAtual(0);
+    setPesquisa(textoPesquisa);
+  }
+
+  function handlePesquisaKeyDown(event) {
+    if (event.key === "Enter") {
+      executarPesquisa();
+    }
+  }
+
+  function ordenarPor(campo) {
+    if (sort === campo) {
+      setDirection((direcaoAtual) => (direcaoAtual === "asc" ? "desc" : "asc"));
+    } else {
+      setSort(campo);
+      setDirection("asc");
+    }
+
+    setPaginaAtual(0);
+  }
 
   function handleExcluir(usuario) {
     setErro("");
@@ -48,17 +85,29 @@ function Usuarios() {
       return;
     }
 
+    const id = usuarioSelecionado.id;
+
     try {
       setExcluindo(true);
       setErro("");
 
-      await excluirUsuario(usuarioSelecionado.id);
+      await excluirUsuario(id);
 
       setModalExcluirAberto(false);
       setUsuarioSelecionado(null);
 
-      await carregarUsuarios();
+      if (usuarios.length === 1 && paginaAtual > 0) {
+        setPaginaAtual(paginaAtual - 1);
+      } else {
+        await carregarUsuarios();
+      }
     } catch (error) {
+      /*
+       * A exclusão pode ser recusada pelo backend.
+       *
+       * Nesse caso fechamos o modal e mostramos
+       * a mensagem retornada pela API.
+       */
       setModalExcluirAberto(false);
       setUsuarioSelecionado(null);
       setErro(error.message);
@@ -74,6 +123,18 @@ function Usuarios() {
 
     setModalExcluirAberto(false);
     setUsuarioSelecionado(null);
+  }
+
+  function irParaPaginaAnterior() {
+    if (paginaAtual > 0) {
+      setPaginaAtual(paginaAtual - 1);
+    }
+  }
+
+  function irParaProximaPagina() {
+    if (paginaAtual < totalPaginas - 1) {
+      setPaginaAtual(paginaAtual + 1);
+    }
   }
 
   if (carregando) {
@@ -101,11 +162,31 @@ function Usuarios() {
           <h2>Usuários</h2>
 
           <p>Gerencie os usuários do sistema.</p>
+
+          <div className="search-container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Pesquisar usuário, e-mail ou perfil..."
+              value={textoPesquisa}
+              onChange={(event) => setTextoPesquisa(event.target.value)}
+              onKeyDown={handlePesquisaKeyDown}
+            />
+
+            <button
+              type="button"
+              className="search-button"
+              onClick={executarPesquisa}
+              title="Pesquisar"
+              aria-label="Pesquisar usuário"
+            >
+              <Search size={19} />
+            </button>
+          </div>
         </div>
 
         <Permissao nome="USUARIO_CRIAR">
           <button
-            type="button"
             className="primary-button"
             onClick={() => navigate("/usuarios/novo")}
           >
@@ -117,14 +198,31 @@ function Usuarios() {
       {erro && <div className="form-message error-message">{erro}</div>}
 
       <div className="table-container">
-        <table className="data-table">
+        <table className="data-table usuarios-table">
           <thead>
             <tr>
               <th>ID</th>
-              <th>Usuário</th>
-              <th>E-mail</th>
+
+              <th
+                onClick={() => ordenarPor("username")}
+                style={{ cursor: "pointer" }}
+              >
+                Usuário{" "}
+                {sort === "username" ? (direction === "asc" ? "↑" : "↓") : ""}
+              </th>
+
+              <th
+                onClick={() => ordenarPor("email")}
+                style={{ cursor: "pointer" }}
+              >
+                E-mail{" "}
+                {sort === "email" ? (direction === "asc" ? "↑" : "↓") : ""}
+              </th>
+
               <th>Perfil</th>
+
               <th>Status</th>
+
               <th>Ações</th>
             </tr>
           </thead>
@@ -155,7 +253,7 @@ function Usuarios() {
                     <Permissao nome="USUARIO_EDITAR">
                       <button
                         type="button"
-                        className="edit-button"
+                        className="icon-button edit-button"
                         onClick={() => navigate("/usuarios/" + usuario.id)}
                         title="Editar usuário"
                       >
@@ -166,7 +264,7 @@ function Usuarios() {
                     <Permissao nome="USUARIO_EXCLUIR">
                       <button
                         type="button"
-                        className="btn-delete"
+                        className="icon-button delete-button"
                         onClick={() => handleExcluir(usuario)}
                         title="Excluir usuário"
                       >
@@ -179,6 +277,30 @@ function Usuarios() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="pagination">
+        <button
+          type="button"
+          className="pagination-button"
+          onClick={irParaPaginaAnterior}
+          disabled={paginaAtual === 0 || carregando}
+        >
+          ← Anterior
+        </button>
+
+        <span>
+          Página {paginaAtual + 1} de {totalPaginas}
+        </span>
+
+        <button
+          type="button"
+          className="pagination-button"
+          onClick={irParaProximaPagina}
+          disabled={paginaAtual >= totalPaginas - 1 || carregando}
+        >
+          Próxima →
+        </button>
       </div>
 
       <ConfirmModal

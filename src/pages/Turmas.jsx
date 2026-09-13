@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Search } from "lucide-react";
 
 import { listarTurmas, excluirTurma } from "../services/turmaService";
 
@@ -28,12 +28,24 @@ function Turmas() {
   const [turmaSelecionada, setTurmaSelecionada] = useState(null);
   const [excluindo, setExcluindo] = useState(false);
 
+  const [textoPesquisa, setTextoPesquisa] = useState("");
+  const [pesquisa, setPesquisa] = useState("");
+
+  const [sort, setSort] = useState("id");
+  const [direction, setDirection] = useState("desc");
+
   async function carregarTurmas() {
     try {
       setCarregando(true);
       setErro("");
 
-      const dados = await listarTurmas(paginaAtual, 10);
+      const dados = await listarTurmas(
+        paginaAtual,
+        10,
+        pesquisa,
+        sort,
+        direction,
+      );
 
       setTurmas(dados.content);
       setTotalPaginas(dados.totalPages);
@@ -46,7 +58,29 @@ function Turmas() {
 
   useEffect(() => {
     carregarTurmas();
-  }, [paginaAtual]);
+  }, [paginaAtual, pesquisa, sort, direction]);
+
+  function executarPesquisa() {
+    setPaginaAtual(0);
+    setPesquisa(textoPesquisa);
+  }
+
+  function handlePesquisaKeyDown(event) {
+    if (event.key === "Enter") {
+      executarPesquisa();
+    }
+  }
+
+  function ordenarPor(campo) {
+    if (sort === campo) {
+      setDirection((direcaoAtual) => (direcaoAtual === "asc" ? "desc" : "asc"));
+    } else {
+      setSort(campo);
+      setDirection("asc");
+    }
+
+    setPaginaAtual(0);
+  }
 
   function handleExcluir(turma) {
     setErro("");
@@ -136,6 +170,27 @@ function Turmas() {
           <h2>Turmas</h2>
 
           <p>Gerencie as turmas cadastradas na academia.</p>
+
+          <div className="search-container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Pesquisar turma..."
+              value={textoPesquisa}
+              onChange={(event) => setTextoPesquisa(event.target.value)}
+              onKeyDown={handlePesquisaKeyDown}
+            />
+
+            <button
+              type="button"
+              className="search-button"
+              onClick={executarPesquisa}
+              title="Pesquisar"
+              aria-label="Pesquisar turma"
+            >
+              <Search size={19} />
+            </button>
+          </div>
         </div>
 
         <Permissao nome="TURMA_CRIAR">
@@ -155,7 +210,14 @@ function Turmas() {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Nome</th>
+
+              <th
+                onClick={() => ordenarPor("nome")}
+                style={{ cursor: "pointer" }}
+              >
+                Nome {sort === "nome" ? (direction === "asc" ? "↑" : "↓") : ""}
+              </th>
+
               <th>Professor</th>
               <th>Modalidade</th>
               <th>Dias</th>
@@ -202,7 +264,7 @@ function Turmas() {
                     <Permissao nome="TURMA_EDITAR">
                       <button
                         type="button"
-                        className="edit-button"
+                        className="icon-button edit-button"
                         onClick={() => navigate("/turmas/" + turma.id)}
                         title="Editar turma"
                       >
@@ -213,7 +275,7 @@ function Turmas() {
                     <Permissao nome="TURMA_EXCLUIR">
                       <button
                         type="button"
-                        className="btn-delete"
+                        className="icon-button delete-button"
                         onClick={() => handleExcluir(turma)}
                         title="Excluir turma"
                       >

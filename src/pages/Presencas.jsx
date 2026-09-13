@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Search } from "lucide-react";
 
 import { listarPresencas, excluirPresenca } from "../services/presencaService";
 
@@ -30,12 +30,24 @@ function Presencas() {
   const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
   const [excluindo, setExcluindo] = useState(false);
 
+  const [textoPesquisa, setTextoPesquisa] = useState("");
+  const [pesquisa, setPesquisa] = useState("");
+
+  const [sort, setSort] = useState("data");
+  const [direction, setDirection] = useState("desc");
+
   const carregarPresencas = useCallback(async () => {
     try {
       setCarregando(true);
       setErro("");
 
-      const dados = await listarPresencas(paginaAtual, 10);
+      const dados = await listarPresencas(
+        paginaAtual,
+        10,
+        pesquisa,
+        sort,
+        direction,
+      );
 
       setPresencas(dados.content);
       setTotalPaginas(dados.totalPages);
@@ -44,11 +56,33 @@ function Presencas() {
     } finally {
       setCarregando(false);
     }
-  }, [paginaAtual]);
+  }, [paginaAtual, pesquisa, sort, direction]);
 
   useEffect(() => {
     carregarPresencas();
   }, [carregarPresencas]);
+
+  function executarPesquisa() {
+    setPaginaAtual(0);
+    setPesquisa(textoPesquisa);
+  }
+
+  function handlePesquisaKeyDown(event) {
+    if (event.key === "Enter") {
+      executarPesquisa();
+    }
+  }
+
+  function ordenarPor(campo) {
+    if (sort === campo) {
+      setDirection((direcaoAtual) => (direcaoAtual === "asc" ? "desc" : "asc"));
+    } else {
+      setSort(campo);
+      setDirection("asc");
+    }
+
+    setPaginaAtual(0);
+  }
 
   function handleExcluir(presenca) {
     setErro("");
@@ -130,7 +164,29 @@ function Presencas() {
       <div className="page-header">
         <div>
           <h2>Presenças</h2>
+
           <p>Controle de presença dos alunos nas aulas.</p>
+
+          <div className="search-container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Pesquisar aluno ou turma..."
+              value={textoPesquisa}
+              onChange={(event) => setTextoPesquisa(event.target.value)}
+              onKeyDown={handlePesquisaKeyDown}
+            />
+
+            <button
+              type="button"
+              className="search-button"
+              onClick={executarPesquisa}
+              title="Pesquisar"
+              aria-label="Pesquisar aluno ou turma"
+            >
+              <Search size={19} />
+            </button>
+          </div>
         </div>
 
         <div className="action-buttons">
@@ -161,7 +217,14 @@ function Presencas() {
               <th>ID</th>
               <th>Aluno</th>
               <th>Turma</th>
-              <th>Data</th>
+
+              <th
+                onClick={() => ordenarPor("data")}
+                style={{ cursor: "pointer" }}
+              >
+                Data {sort === "data" ? (direction === "asc" ? "↑" : "↓") : ""}
+              </th>
+
               <th>Presença</th>
               <th>Observação</th>
               <th>Ações</th>
@@ -207,7 +270,7 @@ function Presencas() {
                     <Permissao nome="PRESENCA_EXCLUIR">
                       <button
                         type="button"
-                        className="btn-action btn-delete"
+                        className="icon-button delete-button"
                         onClick={() => handleExcluir(presenca)}
                         title="Excluir presença"
                       >

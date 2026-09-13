@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { listarAlunos, excluirAluno } from "../services/alunoService";
 import { useNavigate } from "react-router-dom";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Search } from "lucide-react";
 
 import ConfirmModal from "../components/ConfirmModal";
 
@@ -86,6 +86,12 @@ function Alunos() {
   const [alunoSelecionado, setAlunoSelecionado] = useState(null);
   const [excluindo, setExcluindo] = useState(false);
 
+  const [textoPesquisa, setTextoPesquisa] = useState("");
+  const [pesquisa, setPesquisa] = useState("");
+
+  const [sort, setSort] = useState("id");
+  const [direction, setDirection] = useState("desc");
+
   const navigate = useNavigate();
 
   async function carregarAlunos() {
@@ -93,7 +99,13 @@ function Alunos() {
       setCarregando(true);
       setErro("");
 
-      const dados = await listarAlunos(paginaAtual, 10);
+      const dados = await listarAlunos(
+        paginaAtual,
+        10,
+        pesquisa,
+        sort,
+        direction,
+      );
 
       setAlunos(dados.content);
       setTotalPaginas(dados.totalPages);
@@ -106,7 +118,18 @@ function Alunos() {
 
   useEffect(() => {
     carregarAlunos();
-  }, [paginaAtual]);
+  }, [paginaAtual, pesquisa, sort, direction]);
+
+  function executarPesquisa() {
+    setPaginaAtual(0);
+    setPesquisa(textoPesquisa);
+  }
+
+  function handlePesquisaKeyDown(event) {
+    if (event.key === "Enter") {
+      executarPesquisa();
+    }
+  }
 
   function handleExcluir(aluno) {
     setAlunoSelecionado(aluno);
@@ -180,6 +203,17 @@ function Alunos() {
     );
   }
 
+  function ordenarPor(campo) {
+    if (sort === campo) {
+      setDirection((direcaoAtual) => (direcaoAtual === "asc" ? "desc" : "asc"));
+    } else {
+      setSort(campo);
+      setDirection("asc");
+    }
+
+    setPaginaAtual(0);
+  }
+
   return (
     <main className="main">
       <div className="page-header">
@@ -187,6 +221,27 @@ function Alunos() {
           <h2>Alunos</h2>
 
           <p>Gerencie os alunos cadastrados na academia.</p>
+
+          <div className="search-container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Pesquisar aluno..."
+              value={textoPesquisa}
+              onChange={(event) => setTextoPesquisa(event.target.value)}
+              onKeyDown={handlePesquisaKeyDown}
+            />
+
+            <button
+              type="button"
+              className="search-button"
+              onClick={executarPesquisa}
+              title="Pesquisar"
+              aria-label="Pesquisar aluno"
+            >
+              <Search size={19} />
+            </button>
+          </div>
         </div>
 
         <Permissao nome="ALUNO_CRIAR">
@@ -206,7 +261,14 @@ function Alunos() {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Nome</th>
+
+              <th
+                onClick={() => ordenarPor("nome")}
+                style={{ cursor: "pointer" }}
+              >
+                Nome {sort === "nome" ? (direction === "asc" ? "↑" : "↓") : ""}
+              </th>
+
               <th>CPF</th>
               <th>Data nascimento</th>
               <th>Telefone</th>

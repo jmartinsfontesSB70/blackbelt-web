@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Search } from "lucide-react";
 
 import {
   listarProfessores,
@@ -103,12 +103,24 @@ function Professores() {
   const [professorSelecionado, setProfessorSelecionado] = useState(null);
   const [excluindo, setExcluindo] = useState(false);
 
+  const [textoPesquisa, setTextoPesquisa] = useState("");
+  const [pesquisa, setPesquisa] = useState("");
+
+  const [sort, setSort] = useState("id");
+  const [direction, setDirection] = useState("desc");
+
   async function carregarProfessores() {
     try {
       setCarregando(true);
       setErro("");
 
-      const dados = await listarProfessores(paginaAtual, 10);
+      const dados = await listarProfessores(
+        paginaAtual,
+        10,
+        pesquisa,
+        sort,
+        direction,
+      );
 
       setProfessores(dados.content);
       setTotalPaginas(dados.totalPages);
@@ -121,7 +133,29 @@ function Professores() {
 
   useEffect(() => {
     carregarProfessores();
-  }, [paginaAtual]);
+  }, [paginaAtual, pesquisa, sort, direction]);
+
+  function executarPesquisa() {
+    setPaginaAtual(0);
+    setPesquisa(textoPesquisa);
+  }
+
+  function handlePesquisaKeyDown(event) {
+    if (event.key === "Enter") {
+      executarPesquisa();
+    }
+  }
+
+  function ordenarPor(campo) {
+    if (sort === campo) {
+      setDirection((direcaoAtual) => (direcaoAtual === "asc" ? "desc" : "asc"));
+    } else {
+      setSort(campo);
+      setDirection("asc");
+    }
+
+    setPaginaAtual(0);
+  }
 
   function handleExcluir(professor) {
     setErro("");
@@ -205,6 +239,27 @@ function Professores() {
           <h2>Professores</h2>
 
           <p>Gerencie os professores cadastrados na academia.</p>
+
+          <div className="search-box">
+            <input
+              className="search-input"
+              type="text"
+              placeholder="Pesquisar professor..."
+              value={textoPesquisa}
+              onChange={(event) => setTextoPesquisa(event.target.value)}
+              onKeyDown={handlePesquisaKeyDown}
+            />
+
+            <button
+              type="button"
+              className="search-button"
+              onClick={executarPesquisa}
+              title="Pesquisar"
+              aria-label="Pesquisar professor"
+            >
+              <Search size={19} />
+            </button>
+          </div>
         </div>
 
         <Permissao nome="PROFESSOR_CRIAR">
@@ -224,7 +279,14 @@ function Professores() {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Nome</th>
+
+              <th
+                onClick={() => ordenarPor("nome")}
+                style={{ cursor: "pointer" }}
+              >
+                Nome {sort === "nome" ? (direction === "asc" ? "↑" : "↓") : ""}
+              </th>
+
               <th>CPF</th>
               <th>Telefone</th>
               <th>E-mail</th>

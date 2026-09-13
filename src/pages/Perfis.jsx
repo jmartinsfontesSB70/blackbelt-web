@@ -11,8 +11,14 @@ function Perfis() {
   const navigate = useNavigate();
 
   const [perfis, setPerfis] = useState([]);
+  const [paginaAtual, setPaginaAtual] = useState(0);
+  const [totalPaginas, setTotalPaginas] = useState(0);
+
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
+
+  const [sort, setSort] = useState("nome");
+  const [direction, setDirection] = useState("desc");
 
   const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
   const [perfilSelecionado, setPerfilSelecionado] = useState(null);
@@ -23,9 +29,10 @@ function Perfis() {
       setCarregando(true);
       setErro("");
 
-      const dados = await listarPerfis();
+      const dados = await listarPerfis(paginaAtual, 10, sort, direction);
 
-      setPerfis(dados);
+      setPerfis(dados.content);
+      setTotalPaginas(dados.totalPages);
     } catch (error) {
       setErro(error.message);
     } finally {
@@ -35,7 +42,30 @@ function Perfis() {
 
   useEffect(() => {
     carregarPerfis();
-  }, []);
+  }, [paginaAtual, sort, direction]);
+
+  function ordenarPor(campo) {
+    if (sort === campo) {
+      setDirection((valorAtual) => (valorAtual === "asc" ? "desc" : "asc"));
+    } else {
+      setSort(campo);
+      setDirection("asc");
+    }
+
+    setPaginaAtual(0);
+  }
+
+  function irParaPaginaAnterior() {
+    if (paginaAtual > 0) {
+      setPaginaAtual(paginaAtual - 1);
+    }
+  }
+
+  function irParaProximaPagina() {
+    if (paginaAtual < totalPaginas - 1) {
+      setPaginaAtual(paginaAtual + 1);
+    }
+  }
 
   function handleExcluir(perfil) {
     setErro("");
@@ -57,7 +87,11 @@ function Perfis() {
       setModalExcluirAberto(false);
       setPerfilSelecionado(null);
 
-      await carregarPerfis();
+      if (perfis.length === 1 && paginaAtual > 0) {
+        setPaginaAtual(paginaAtual - 1);
+      } else {
+        await carregarPerfis();
+      }
     } catch (error) {
       setModalExcluirAberto(false);
       setPerfilSelecionado(null);
@@ -125,7 +159,15 @@ function Perfis() {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Perfil</th>
+
+              <th
+                onClick={() => ordenarPor("nome")}
+                style={{ cursor: "pointer" }}
+              >
+                Perfil{" "}
+                {sort === "nome" ? (direction === "asc" ? "↑" : "↓") : ""}
+              </th>
+
               <th>Permissões</th>
               <th>Ações</th>
             </tr>
@@ -173,6 +215,30 @@ function Perfis() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="pagination">
+        <button
+          type="button"
+          className="pagination-button"
+          onClick={irParaPaginaAnterior}
+          disabled={paginaAtual === 0}
+        >
+          ← Anterior
+        </button>
+
+        <span>
+          Página {paginaAtual + 1} de {totalPaginas}
+        </span>
+
+        <button
+          type="button"
+          className="pagination-button"
+          onClick={irParaProximaPagina}
+          disabled={paginaAtual >= totalPaginas - 1}
+        >
+          Próxima →
+        </button>
       </div>
 
       <ConfirmModal

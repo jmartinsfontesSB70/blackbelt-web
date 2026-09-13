@@ -9,7 +9,7 @@ import {
   alterarSenhaUsuario,
 } from "../services/usuarioService";
 
-import { listarPerfis } from "../services/perfilService";
+import { listarPerfisParaSelecao } from "../services/perfilService";
 
 function UsuarioForm() {
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ function UsuarioForm() {
       setErro("");
       setSucesso("");
 
-      const listaPerfis = await listarPerfis();
+      const listaPerfis = await listarPerfisParaSelecao();
 
       setPerfis(listaPerfis);
 

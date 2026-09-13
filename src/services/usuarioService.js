@@ -2,8 +2,25 @@ import { apiFetch } from "./api";
 
 const API_URL = "/usuarios";
 
-export async function listarUsuarios() {
-  return await apiFetch(API_URL);
+export async function listarUsuarios(
+  page = 0,
+  size = 10,
+  pesquisa = "",
+  sort = "id",
+  direction = "desc",
+) {
+  const params = new URLSearchParams({
+    page,
+    size,
+    sort,
+    direction,
+  });
+
+  if (pesquisa && pesquisa.trim()) {
+    params.append("pesquisa", pesquisa.trim());
+  }
+
+  return await apiFetch(`${API_URL}?${params.toString()}`);
 }
 
 export async function buscarUsuarioPorId(id) {

@@ -2,8 +2,25 @@ import { apiFetch } from "./api";
 
 const API_URL = "/turmas";
 
-export async function listarTurmas(page = 0, size = 10) {
-  return await apiFetch(`${API_URL}?page=${page}&size=${size}`);
+export async function listarTurmas(
+  page = 0,
+  size = 10,
+  pesquisa = "",
+  sort = "id",
+  direction = "desc",
+) {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+    sort,
+    direction,
+  });
+
+  if (pesquisa.trim()) {
+    params.append("pesquisa", pesquisa.trim());
+  }
+
+  return await apiFetch(`${API_URL}?${params.toString()}`);
 }
 
 export async function listarTurmasParaSelecao() {
