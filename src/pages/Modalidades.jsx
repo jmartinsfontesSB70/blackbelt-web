@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Pencil, Trash2, Search } from "lucide-react";
+import { Pencil, Trash2, Search, GraduationCap } from "lucide-react";
 
 import Permissao from "../components/Permissao";
 
@@ -231,7 +231,21 @@ function Modalidades() {
                 </td>
 
                 <td>
-                  <div className="action-buttons">
+                  <div className="action-buttons graduation-button">
+                    <button
+                      type="button"
+                      className="icon-button edit-button"
+                      onClick={() =>
+                        navigate(
+                          "/modalidades/" + modalidade.id + "/graduacoes",
+                        )
+                      }
+                      title="Gerenciar graduações"
+                      aria-label="Gerenciar graduações"
+                    >
+                      <GraduationCap size={18} />
+                    </button>
+
                     <Permissao nome="MODALIDADE_EDITAR">
                       <button
                         type="button"

@@ -10,6 +10,15 @@ import {
 import { listarProfessoresParaSelecao } from "../services/professorService";
 import { listarModalidadesParaSelecao } from "../services/modalidadeService";
 
+const diasDisponiveis = [
+  { valor: "SEGUNDA", nome: "Segunda-feira" },
+  { valor: "TERCA", nome: "Terça-feira" },
+  { valor: "QUARTA", nome: "Quarta-feira" },
+  { valor: "QUINTA", nome: "Quinta-feira" },
+  { valor: "SEXTA", nome: "Sexta-feira" },
+  { valor: "SABADO", nome: "Sábado" },
+];
+
 function TurmaForm() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -17,7 +26,7 @@ function TurmaForm() {
   const [nome, setNome] = useState("");
   const [professorId, setProfessorId] = useState("");
   const [modalidadeId, setModalidadeId] = useState("");
-  const [diasSemana, setDiasSemana] = useState("");
+  const [diasSemana, setDiasSemana] = useState([]);
   const [horarioInicio, setHorarioInicio] = useState("");
   const [horarioFim, setHorarioFim] = useState("");
   const [capacidade, setCapacidade] = useState("");
@@ -46,7 +55,7 @@ function TurmaForm() {
           setNome(turma.nome);
           setProfessorId(String(turma.professorId));
           setModalidadeId(String(turma.modalidadeId));
-          setDiasSemana(turma.diasSemana);
+          setDiasSemana(turma.diasSemana || []);
           setHorarioInicio(turma.horarioInicio);
           setHorarioFim(turma.horarioFim);
           setCapacidade(String(turma.capacidade));
@@ -61,6 +70,16 @@ function TurmaForm() {
     carregarDados();
   }, [id]);
 
+  function alternarDia(dia) {
+    setDiasSemana((diasAtuais) => {
+      if (diasAtuais.includes(dia)) {
+        return diasAtuais.filter((item) => item !== dia);
+      }
+
+      return [...diasAtuais, dia];
+    });
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -74,6 +93,11 @@ function TurmaForm() {
 
     if (!modalidadeId) {
       setErro("Selecione a modalidade da turma.");
+      return;
+    }
+
+    if (diasSemana.length === 0) {
+      setErro("Selecione pelo menos um dia da semana.");
       return;
     }
 
@@ -187,17 +211,33 @@ function TurmaForm() {
             </select>
           </div>
 
-          {/* DIAS */}
+          {/* DIAS DA SEMANA */}
 
           <div className="form-group full-width">
             <label>Dias da semana</label>
 
-            <input
-              type="text"
-              value={diasSemana}
-              onChange={(event) => setDiasSemana(event.target.value)}
-              placeholder="Ex.: Segunda, Quarta e Sexta"
-            />
+            <div className="dias-semana-container">
+              {diasDisponiveis.map((dia) => {
+                const selecionado = diasSemana.includes(dia.valor);
+
+                return (
+                  <button
+                    key={dia.valor}
+                    type="button"
+                    className={`dia-semana-item ${
+                      selecionado ? "selecionado" : ""
+                    }`}
+                    onClick={() => alternarDia(dia.valor)}
+                  >
+                    <span>{dia.nome}</span>
+
+                    <span className="dia-semana-checkbox">
+                      {selecionado && "✓"}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* HORÁRIO INICIAL */}

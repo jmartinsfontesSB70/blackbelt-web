@@ -239,7 +239,22 @@ function Turmas() {
 
                 <td>{turma.modalidadeNome}</td>
 
-                <td>{turma.diasSemana}</td>
+                <td>
+                  {turma.diasSemana
+                    ?.map((dia) => {
+                      const nomesDias = {
+                        SEGUNDA: "Segunda-feira",
+                        TERCA: "Terça-feira",
+                        QUARTA: "Quarta-feira",
+                        QUINTA: "Quinta-feira",
+                        SEXTA: "Sexta-feira",
+                        SABADO: "Sábado",
+                      };
+
+                      return nomesDias[dia] || dia;
+                    })
+                    .join(", ")}
+                </td>
 
                 <td>
                   {formatarHorario(turma.horarioInicio)}

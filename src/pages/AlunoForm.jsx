@@ -4,6 +4,7 @@ import {
   buscarAlunoPorId,
   atualizarAluno,
 } from "../services/alunoService";
+import HistoricoGraduacao from "../components/HistoricoGraduacao";
 import { useNavigate, useParams } from "react-router-dom";
 
 function formatarCpf(valor) {
@@ -375,6 +376,7 @@ function AlunoForm() {
           </button>
         </div>
       </form>
+      {id && <HistoricoGraduacao alunoId={id} />}
     </main>
   );
 }
