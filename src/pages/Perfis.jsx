@@ -184,31 +184,36 @@ function Perfis() {
 
                 <td>
                   <div className="action-buttons">
-                    {!perfilAdmin(perfil) && (
-                      <>
-                        <Permissao nome="PERFIL_EDITAR">
-                          <button
-                            type="button"
-                            className="edit-button"
-                            onClick={() => navigate("/perfis/" + perfil.id)}
-                            title="Editar perfil"
-                          >
-                            <Pencil size={18} />
-                          </button>
-                        </Permissao>
+                    <Permissao nome="PERFIL_EDITAR">
+                      <button
+                        type="button"
+                        className="icon-button edit-button"
+                        onClick={() => navigate("/perfis/" + perfil.id)}
+                        title="Editar perfil"
+                      >
+                        <Pencil size={18} />
+                      </button>
+                    </Permissao>
 
-                        <Permissao nome="PERFIL_EXCLUIR">
-                          <button
-                            type="button"
-                            className="btn-delete"
-                            onClick={() => handleExcluir(perfil)}
-                            title="Excluir perfil"
-                          >
-                            <Trash2 size={18} />
-                          </button>
-                        </Permissao>
-                      </>
-                    )}
+                    <Permissao nome="PERFIL_EXCLUIR">
+                      <button
+                        type="button"
+                        className={
+                          perfilAdmin(perfil)
+                            ? "icon-button delete-button admin-delete-disabled"
+                            : "icon-button delete-button"
+                        }
+                        onClick={() => handleExcluir(perfil)}
+                        disabled={perfilAdmin(perfil)}
+                        title={
+                          perfilAdmin(perfil)
+                            ? "O perfil admin não pode ser excluído."
+                            : "Excluir perfil"
+                        }
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </Permissao>
                   </div>
                 </td>
               </tr>

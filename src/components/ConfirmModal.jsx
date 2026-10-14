@@ -5,6 +5,7 @@ function ConfirmModal({
   onConfirmar,
   onCancelar,
   carregando = false,
+  textoCancelar = "Voltar",
   textoConfirmar = "Excluir",
   icone = "🗑️",
 }) {
@@ -28,7 +29,7 @@ function ConfirmModal({
             onClick={onCancelar}
             disabled={carregando}
           >
-            Cancelar
+            {textoCancelar}
           </button>
 
           <button
@@ -37,7 +38,7 @@ function ConfirmModal({
             onClick={onConfirmar}
             disabled={carregando}
           >
-            {carregando ? "Saindo..." : textoConfirmar}
+            {carregando ? "Processando..." : textoConfirmar}
           </button>
         </div>
       </div>

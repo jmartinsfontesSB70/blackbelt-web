@@ -60,3 +60,30 @@ export async function excluirProfessor(id) {
     method: "DELETE",
   });
 }
+
+// =========================
+// FOTOS
+// =========================
+
+export async function enviarFotoProfessor(id, arquivo) {
+  const formData = new FormData();
+
+  formData.append("foto", arquivo);
+
+  return await apiFetch(`${API_URL}/${id}/foto`, {
+    method: "POST",
+    body: formData,
+  });
+}
+
+export async function buscarFotoProfessor(id) {
+  return await apiFetch(`${API_URL}/${id}/foto`, {
+    responseType: "blob",
+  });
+}
+
+export async function excluirFotoProfessor(id) {
+  return await apiFetch(`${API_URL}/${id}/foto`, {
+    method: "DELETE",
+  });
+}

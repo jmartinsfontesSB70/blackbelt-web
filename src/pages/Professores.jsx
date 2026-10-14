@@ -5,6 +5,7 @@ import { Pencil, Trash2, Search } from "lucide-react";
 import {
   listarProfessores,
   excluirProfessor,
+  buscarFotoProfessor,
 } from "../services/professorService";
 
 import ConfirmModal from "../components/ConfirmModal";
@@ -94,6 +95,8 @@ function Professores() {
   const navigate = useNavigate();
 
   const [professores, setProfessores] = useState([]);
+  const [fotos, setFotos] = useState({});
+
   const [paginaAtual, setPaginaAtual] = useState(0);
   const [totalPaginas, setTotalPaginas] = useState(0);
   const [carregando, setCarregando] = useState(true);
@@ -124,6 +127,29 @@ function Professores() {
 
       setProfessores(dados.content);
       setTotalPaginas(dados.totalPages);
+
+      const novasFotos = {};
+
+      await Promise.all(
+        dados.content.map(async (professor) => {
+          if (!professor.possuiFoto) {
+            return;
+          }
+
+          try {
+            const blob = await buscarFotoProfessor(professor.id);
+
+            novasFotos[professor.id] = URL.createObjectURL(blob);
+          } catch (error) {
+            console.error(
+              "Não foi possível carregar a foto do professor:",
+              professor.id,
+            );
+          }
+        }),
+      );
+
+      setFotos(novasFotos);
     } catch (error) {
       setErro(error.message);
     } finally {
@@ -134,6 +160,14 @@ function Professores() {
   useEffect(() => {
     carregarProfessores();
   }, [paginaAtual, pesquisa, sort, direction]);
+
+  useEffect(() => {
+    return () => {
+      Object.values(fotos).forEach((url) => {
+        URL.revokeObjectURL(url);
+      });
+    };
+  }, [fotos]);
 
   function executarPesquisa() {
     setPaginaAtual(0);
@@ -278,6 +312,8 @@ function Professores() {
         <table className="data-table professores-table">
           <thead>
             <tr>
+              <th>Foto</th>
+
               <th>ID</th>
 
               <th
@@ -300,6 +336,20 @@ function Professores() {
           <tbody>
             {professores.map((professor) => (
               <tr key={professor.id}>
+                <td>
+                  <div className="table-photo">
+                    {fotos[professor.id] ? (
+                      <img
+                        src={fotos[professor.id]}
+                        alt={"Foto de " + professor.nome}
+                        className="table-photo-image"
+                      />
+                    ) : (
+                      <div className="table-photo-placeholder">👤</div>
+                    )}
+                  </div>
+                </td>
+
                 <td>{professor.id}</td>
 
                 <td className="name-cell">{professor.nome}</td>

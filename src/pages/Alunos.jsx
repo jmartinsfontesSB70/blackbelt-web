@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { listarAlunos, excluirAluno } from "../services/alunoService";
+import {
+  listarAlunos,
+  excluirAluno,
+  buscarFotoAluno,
+} from "../services/alunoService";
 import { useNavigate } from "react-router-dom";
 import { Pencil, Trash2, Search } from "lucide-react";
 
@@ -92,6 +96,12 @@ function Alunos() {
   const [sort, setSort] = useState("id");
   const [direction, setDirection] = useState("desc");
 
+  // =========================
+  // FOTOS
+  // =========================
+
+  const [fotos, setFotos] = useState({});
+
   const navigate = useNavigate();
 
   async function carregarAlunos() {
@@ -109,6 +119,30 @@ function Alunos() {
 
       setAlunos(dados.content);
       setTotalPaginas(dados.totalPages);
+
+      // =========================
+      // CARREGAR FOTOS
+      // =========================
+
+      const novasFotos = {};
+
+      await Promise.all(
+        dados.content.map(async (aluno) => {
+          if (!aluno.possuiFoto) {
+            return;
+          }
+
+          try {
+            const blob = await buscarFotoAluno(aluno.id);
+
+            novasFotos[aluno.id] = URL.createObjectURL(blob);
+          } catch (error) {
+            console.error("Não foi possível carregar a foto do aluno.", error);
+          }
+        }),
+      );
+
+      setFotos(novasFotos);
     } catch (error) {
       setErro(error.message);
     } finally {
@@ -119,6 +153,18 @@ function Alunos() {
   useEffect(() => {
     carregarAlunos();
   }, [paginaAtual, pesquisa, sort, direction]);
+
+  // =========================
+  // LIMPAR URLS DAS FOTOS
+  // =========================
+
+  useEffect(() => {
+    return () => {
+      Object.values(fotos).forEach((url) => {
+        URL.revokeObjectURL(url);
+      });
+    };
+  }, [fotos]);
 
   function executarPesquisa() {
     setPaginaAtual(0);
@@ -260,6 +306,8 @@ function Alunos() {
         <table className="data-table">
           <thead>
             <tr>
+              <th>Foto</th>
+
               <th>ID</th>
 
               <th
@@ -270,9 +318,13 @@ function Alunos() {
               </th>
 
               <th>CPF</th>
+
               <th>Data nascimento</th>
+
               <th>Telefone</th>
+
               <th>Status</th>
+
               <th>Ações</th>
             </tr>
           </thead>
@@ -280,6 +332,24 @@ function Alunos() {
           <tbody>
             {alunos.map((aluno) => (
               <tr key={aluno.id}>
+                {/* =========================
+                    FOTO
+                ========================== */}
+
+                <td>
+                  <div className="table-photo">
+                    {fotos[aluno.id] ? (
+                      <img
+                        src={fotos[aluno.id]}
+                        alt={"Foto de " + aluno.nome}
+                        className="table-photo-image"
+                      />
+                    ) : (
+                      <div className="table-photo-placeholder">👤</div>
+                    )}
+                  </div>
+                </td>
+
                 <td>{aluno.id}</td>
 
                 <td className="name-cell">{aluno.nome}</td>

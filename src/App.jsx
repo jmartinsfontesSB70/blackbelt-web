@@ -39,6 +39,16 @@ import ChamadaForm from "./pages/ChamadaForm";
 import RecuperacaoSenha from "./pages/RecuperacaoSenha";
 import RedefinirSenha from "./pages/RedefinirSenha";
 
+import TipoCobrancas from "./pages/TipoCobrancas";
+import TipoCobrancaForm from "./pages/TipoCobrancaForm";
+
+import CobrancaForm from "./pages/CobrancaForm";
+import Cobrancas from "./pages/Cobrancas";
+import CobrancaDetalhe from "./pages/CobrancaDetalhe";
+
+import AcademiaInstalacao from "./pages/AcademiaInstalacao";
+import LicencaAtivacao from "./pages/LicencaAtivacao";
+
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 
 function LayoutPrivado() {
@@ -60,14 +70,12 @@ function App() {
     <ThemeProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-
+          <Route path="/" element={<Navigate to="/instalacao" replace />} />
+          <Route path="/instalacao" element={<AcademiaInstalacao />} />
           <Route path="/login" element={<Login />} />
-
           <Route path="/recuperacao-senha" element={<RecuperacaoSenha />} />
-
           <Route path="/redefinir-senha" element={<RedefinirSenha />} />
-
+          <Route path="/licenca/ativar" element={<LicencaAtivacao />} />
           <Route element={<RotaPrivada />}>
             <Route element={<LayoutPrivado />}>
               <Route path="/dashboard" element={<Dashboard />} />
@@ -150,6 +158,38 @@ function App() {
                 path="/modalidades/:modalidadeId/graduacoes/:id"
                 element={<GraduacaoForm />}
               />
+
+              {/* TIPO COBRANÇA */}
+              <Route element={<RotaPermissao nome="TIPO_COBRANCA_LISTAR" />}>
+                <Route path="/tipos-cobranca" element={<TipoCobrancas />} />
+              </Route>
+
+              <Route element={<RotaPermissao nome="TIPO_COBRANCA_CADASTRAR" />}>
+                <Route
+                  path="/tipos-cobranca/novo"
+                  element={<TipoCobrancaForm />}
+                />
+              </Route>
+
+              <Route element={<RotaPermissao nome="TIPO_COBRANCA_EDITAR" />}>
+                <Route
+                  path="/tipos-cobranca/:id"
+                  element={<TipoCobrancaForm />}
+                />
+              </Route>
+
+              {/* COBRANÇAS */}
+              <Route element={<RotaPermissao nome="COBRANCA_LISTAR" />}>
+                <Route path="/cobrancas" element={<Cobrancas />} />
+              </Route>
+
+              <Route element={<RotaPermissao nome="COBRANCA_CADASTRAR" />}>
+                <Route path="/cobrancas/nova" element={<CobrancaForm />} />
+              </Route>
+
+              <Route element={<RotaPermissao nome="COBRANCA_LISTAR" />}>
+                <Route path="/cobrancas/:id" element={<CobrancaDetalhe />} />
+              </Route>
 
               {/* USUÁRIOS */}
               <Route element={<RotaPermissao nome="USUARIO_LISTAR" />}>

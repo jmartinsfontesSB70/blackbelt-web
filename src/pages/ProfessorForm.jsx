@@ -3,6 +3,9 @@ import {
   cadastrarProfessor,
   buscarProfessorPorId,
   atualizarProfessor,
+  enviarFotoProfessor,
+  buscarFotoProfessor,
+  excluirFotoProfessor,
 } from "../services/professorService";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -78,8 +81,66 @@ function ProfessorForm() {
     pontoReferencia: "",
   });
 
+  // =========================
+  // FOTO
+  // =========================
+
+  const [foto, setFoto] = useState(null);
+  const [fotoPreview, setFotoPreview] = useState(null);
+  const [possuiFoto, setPossuiFoto] = useState(false);
+  const [carregandoFoto, setCarregandoFoto] = useState(false);
+
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
+
+  // =========================
+  // SELECIONAR FOTO
+  // =========================
+
+  function handleSelecionarFoto(event) {
+    const arquivo = event.target.files?.[0];
+
+    if (!arquivo) {
+      return;
+    }
+
+    setFoto(arquivo);
+    setFotoPreview(URL.createObjectURL(arquivo));
+  }
+
+  // =========================
+  // EXCLUIR FOTO
+  // =========================
+
+  async function handleExcluirFoto() {
+    if (!id) {
+      setFoto(null);
+      setFotoPreview(null);
+      return;
+    }
+
+    try {
+      setCarregandoFoto(true);
+      setErro("");
+      setSucesso("");
+
+      await excluirFotoProfessor(id);
+
+      setFoto(null);
+      setFotoPreview(null);
+      setPossuiFoto(false);
+
+      setSucesso("Foto removida com sucesso!");
+    } catch (error) {
+      setErro(error.message);
+    } finally {
+      setCarregandoFoto(false);
+    }
+  }
+
+  // =========================
+  // CARREGAR PROFESSOR
+  // =========================
 
   useEffect(() => {
     if (!id) {
@@ -108,6 +169,27 @@ function ProfessorForm() {
           cep: professor.endereco.cep,
           pontoReferencia: professor.endereco.pontoReferencia,
         });
+
+        // =========================
+        // CARREGAR FOTO
+        // =========================
+
+        setPossuiFoto(professor.possuiFoto);
+
+        if (professor.possuiFoto) {
+          try {
+            const blob = await buscarFotoProfessor(id);
+
+            const url = URL.createObjectURL(blob);
+
+            setFotoPreview(url);
+          } catch (error) {
+            console.error(
+              "Não foi possível carregar a foto do professor.",
+              error,
+            );
+          }
+        }
       } catch (error) {
         setErro(error.message);
       }
@@ -115,6 +197,22 @@ function ProfessorForm() {
 
     carregarProfessor();
   }, [id]);
+
+  // =========================
+  // LIMPAR URL DA FOTO
+  // =========================
+
+  useEffect(() => {
+    return () => {
+      if (fotoPreview) {
+        URL.revokeObjectURL(fotoPreview);
+      }
+    };
+  }, [fotoPreview]);
+
+  // =========================
+  // SALVAR PROFESSOR
+  // =========================
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -135,10 +233,22 @@ function ProfessorForm() {
     };
 
     try {
+      let professorSalvo;
+
       if (id) {
-        await atualizarProfessor(id, professor);
+        professorSalvo = await atualizarProfessor(id, professor);
       } else {
-        await cadastrarProfessor(professor);
+        professorSalvo = await cadastrarProfessor(professor);
+      }
+
+      // =========================
+      // SALVAR FOTO
+      // =========================
+
+      if (foto) {
+        await enviarFotoProfessor(professorSalvo.id, foto);
+
+        setPossuiFoto(true);
       }
 
       setSucesso(
@@ -175,6 +285,48 @@ function ProfessorForm() {
         {sucesso && (
           <div className="form-message success-message">{sucesso}</div>
         )}
+
+        {/* =========================
+            FOTO
+        ========================== */}
+
+        <div className="foto-section">
+          <div className="foto-preview">
+            {fotoPreview ? (
+              <img
+                src={fotoPreview}
+                alt="Foto do professor"
+                className="foto-preview-image"
+              />
+            ) : (
+              <div className="foto-placeholder">👤</div>
+            )}
+          </div>
+
+          <div className="foto-actions">
+            <label className="secondary-button foto-upload-button">
+              {fotoPreview ? "Alterar foto" : "Escolher foto"}
+
+              <input
+                type="file"
+                accept="image/jpeg"
+                onChange={handleSelecionarFoto}
+                hidden
+              />
+            </label>
+
+            {fotoPreview && id && (
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={handleExcluirFoto}
+                disabled={carregandoFoto}
+              >
+                {carregandoFoto ? "Removendo..." : "Remover foto"}
+              </button>
+            )}
+          </div>
+        </div>
 
         <div className="form-grid">
           {/* =========================

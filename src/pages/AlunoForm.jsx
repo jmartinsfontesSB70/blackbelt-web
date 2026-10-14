@@ -3,6 +3,9 @@ import {
   cadastrarAluno,
   buscarAlunoPorId,
   atualizarAluno,
+  enviarFotoAluno,
+  buscarFotoAluno,
+  excluirFotoAluno,
 } from "../services/alunoService";
 import HistoricoGraduacao from "../components/HistoricoGraduacao";
 import { useNavigate, useParams } from "react-router-dom";
@@ -78,8 +81,50 @@ function AlunoForm() {
 
   const [ativo, setAtivo] = useState(true);
 
+  const [foto, setFoto] = useState(null);
+  const [fotoPreview, setFotoPreview] = useState(null);
+  const [possuiFoto, setPossuiFoto] = useState(false);
+  const [carregandoFoto, setCarregandoFoto] = useState(false);
+
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
+
+  function handleSelecionarFoto(event) {
+    const arquivo = event.target.files?.[0];
+
+    if (!arquivo) {
+      return;
+    }
+
+    setFoto(arquivo);
+    setFotoPreview(URL.createObjectURL(arquivo));
+  }
+
+  async function handleExcluirFoto() {
+    if (!id) {
+      setFoto(null);
+      setFotoPreview(null);
+      return;
+    }
+
+    try {
+      setCarregandoFoto(true);
+      setErro("");
+      setSucesso("");
+
+      await excluirFotoAluno(id);
+
+      setFoto(null);
+      setFotoPreview(null);
+      setPossuiFoto(false);
+
+      setSucesso("Foto removida com sucesso!");
+    } catch (error) {
+      setErro(error.message);
+    } finally {
+      setCarregandoFoto(false);
+    }
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -98,10 +143,16 @@ function AlunoForm() {
     };
 
     try {
+      let alunoSalvo;
+
       if (id) {
-        await atualizarAluno(id, aluno);
+        alunoSalvo = await atualizarAluno(id, aluno);
       } else {
-        await cadastrarAluno(aluno);
+        alunoSalvo = await cadastrarAluno(aluno);
+      }
+
+      if (foto) {
+        await enviarFotoAluno(alunoSalvo.id, foto);
       }
 
       setSucesso(
@@ -131,6 +182,7 @@ function AlunoForm() {
         setTelefone(formatarTelefone(aluno.telefone));
         setEmail(aluno.email);
         setAtivo(aluno.ativo);
+        setPossuiFoto(aluno.possuiFoto);
 
         setEndereco({
           rua: aluno.endereco.rua,
@@ -141,6 +193,17 @@ function AlunoForm() {
           cep: aluno.endereco.cep,
           pontoReferencia: aluno.endereco.pontoReferencia,
         });
+
+        if (aluno.possuiFoto) {
+          try {
+            const blob = await buscarFotoAluno(id);
+            const url = URL.createObjectURL(blob);
+
+            setFotoPreview(url);
+          } catch (error) {
+            console.error("Não foi possível carregar a foto do aluno.", error);
+          }
+        }
       } catch (error) {
         setErro(error.message);
       }
@@ -148,6 +211,14 @@ function AlunoForm() {
 
     carregarAluno();
   }, [id]);
+
+  useEffect(() => {
+    return () => {
+      if (fotoPreview) {
+        URL.revokeObjectURL(fotoPreview);
+      }
+    };
+  }, [fotoPreview]);
 
   return (
     <main className="main">
@@ -162,10 +233,11 @@ function AlunoForm() {
           </p>
         </div>
       </div>
+
       <form className="form-container" onSubmit={handleSubmit}>
         {/* =========================
-        MENSAGENS
-    ========================== */}
+            MENSAGENS
+        ========================== */}
 
         {erro && <div className="form-message error-message">{erro}</div>}
 
@@ -174,8 +246,50 @@ function AlunoForm() {
         )}
 
         {/* =========================
-        DADOS PESSOAIS
-    ========================== */}
+            FOTO
+        ========================== */}
+
+        <div className="foto-section">
+          <div className="foto-preview">
+            {fotoPreview ? (
+              <img
+                src={fotoPreview}
+                alt="Foto do aluno"
+                className="foto-preview-image"
+              />
+            ) : (
+              <div className="foto-placeholder">👤</div>
+            )}
+          </div>
+
+          <div className="foto-actions">
+            <label className="secondary-button foto-upload-button">
+              {fotoPreview ? "Alterar foto" : "Escolher foto"}
+
+              <input
+                type="file"
+                accept="image/jpeg"
+                onChange={handleSelecionarFoto}
+                hidden
+              />
+            </label>
+
+            {fotoPreview && id && (
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={handleExcluirFoto}
+                disabled={carregandoFoto}
+              >
+                {carregandoFoto ? "Removendo..." : "Remover foto"}
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* =========================
+            DADOS PESSOAIS
+        ========================== */}
 
         <div className="form-grid">
           <div className="form-group">
@@ -235,8 +349,8 @@ function AlunoForm() {
           </div>
 
           {/* =========================
-          ENDEREÇO
-      ========================== */}
+              ENDEREÇO
+          ========================== */}
 
           <div className="form-section-title full-width">
             <h3>Endereço</h3>
@@ -359,8 +473,8 @@ function AlunoForm() {
         </div>
 
         {/* =========================
-        AÇÕES
-    ========================== */}
+            AÇÕES
+        ========================== */}
 
         <div className="form-actions">
           <button
@@ -376,6 +490,7 @@ function AlunoForm() {
           </button>
         </div>
       </form>
+
       {id && <HistoricoGraduacao alunoId={id} />}
     </main>
   );

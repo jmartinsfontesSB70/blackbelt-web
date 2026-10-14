@@ -1,0 +1,169 @@
+.instalacao-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 16px;
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+.instalacao-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 32px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.instalacao-card-largo {
+  max-width: 720px;
+  text-align: left;
+}
+
+.instalacao-logo {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.instalacao-card h1 {
+  margin: 0;
+  text-align: center;
+  font-size: 28px;
+}
+
+.instalacao-subtitulo {
+  margin: 8px 0 24px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.instalacao-divisor {
+  height: 1px;
+  margin: 24px 0;
+  background: #e5e7eb;
+}
+
+.instalacao-card h2 {
+  margin: 28px 0 16px;
+  font-size: 18px;
+}
+
+.instalacao-card h2:first-child {
+  margin-top: 0;
+}
+
+.instalacao-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.instalacao-campo label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.instalacao-campo input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111827;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.instalacao-campo input:focus {
+  outline: 2px solid #9ca3af;
+  outline-offset: 1px;
+  border-color: #6b7280;
+}
+
+.instalacao-campo input[type="file"] {
+  padding: 8px;
+}
+
+.instalacao-campo small {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.instalacao-grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.instalacao-button {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.instalacao-button:hover {
+  opacity: 0.88;
+}
+
+.instalacao-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.instalacao-erro {
+  margin: 16px 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 14px;
+}
+
+.instalacao-sucesso {
+  color: #15803d;
+  font-weight: 600;
+}
+
+.instalacao-aviso {
+  margin: 16px 0 0;
+  color: #6b7280;
+  font-size: 12px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .instalacao-container {
+    padding: 16px 10px;
+  }
+
+  .instalacao-card {
+    padding: 24px 18px;
+  }
+
+  .instalacao-grade {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

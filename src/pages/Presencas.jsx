@@ -225,8 +225,8 @@ function Presencas() {
                 Data {sort === "data" ? (direction === "asc" ? "↑" : "↓") : ""}
               </th>
 
+              <th className="presenca-observacao">Observação</th>
               <th>Presença</th>
-              <th>Observação</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -242,6 +242,10 @@ function Presencas() {
 
                 <td>{formatarData(presenca.data)}</td>
 
+                <td className="presenca-observacao">
+                  {presenca.observacao || ""}
+                </td>
+
                 <td>
                   <span
                     className={
@@ -251,8 +255,6 @@ function Presencas() {
                     {presenca.presente ? "Presente" : "Ausente"}
                   </span>
                 </td>
-
-                <td>{presenca.observacao || ""}</td>
 
                 <td>
                   <div className="action-buttons">

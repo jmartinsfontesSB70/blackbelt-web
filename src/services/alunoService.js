@@ -60,3 +60,26 @@ export async function excluirAluno(id) {
     method: "DELETE",
   });
 }
+
+export async function enviarFotoAluno(id, arquivo) {
+  const formData = new FormData();
+
+  formData.append("foto", arquivo);
+
+  return await apiFetch(`${API_URL}/${id}/foto`, {
+    method: "POST",
+    body: formData,
+  });
+}
+
+export async function buscarFotoAluno(id) {
+  return await apiFetch(`${API_URL}/${id}/foto`, {
+    responseType: "blob",
+  });
+}
+
+export async function excluirFotoAluno(id) {
+  return await apiFetch(`${API_URL}/${id}/foto`, {
+    method: "DELETE",
+  });
+}
