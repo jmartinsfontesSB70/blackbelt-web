@@ -49,6 +49,8 @@ import CobrancaDetalhe from "./pages/CobrancaDetalhe";
 import AcademiaInstalacao from "./pages/AcademiaInstalacao";
 import LicencaAtivacao from "./pages/LicencaAtivacao";
 
+import AcademiaEditar from "./pages/AcademiaEditar";
+
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 
 function LayoutPrivado() {
@@ -212,6 +214,10 @@ function App() {
                 <Route path="/perfis/:id" element={<PerfilForm />} />
               </Route>
               <Route path="/alterar-senha" element={<AlterarSenha />} />
+              {/* ACADEMIA */}
+              <Route element={<RotaPermissao nome="ACADEMIA_EDITAR" />}>
+                <Route path="/academia" element={<AcademiaEditar />} />
+              </Route>
             </Route>
           </Route>
         </Routes>

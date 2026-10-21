@@ -9,13 +9,48 @@ import {
 
 import { listarPermissoes } from "../services/permissaoService";
 
+function formatarModulo(modulo) {
+  const nomes = {
+    ALUNO: "Alunos",
+    PROFESSOR: "Professores",
+    MODALIDADE: "Modalidades",
+    TURMA: "Turmas",
+    MATRICULA: "Matrículas",
+    PRESENCA: "Presenças",
+    USUARIO: "Usuários",
+    PERFIL: "Perfis",
+    COBRANCA: "Cobranças",
+    PAGAMENTO: "Pagamentos",
+    TIPO_COBRANCA: "Tipos de cobrança",
+    ACADEMIA: "Academia",
+  };
+
+  return nomes[modulo] || modulo;
+}
+
+function formatarAcao(acao) {
+  const nomes = {
+    LISTAR: "Listar",
+    CRIAR: "Criar",
+    CADASTRAR: "Cadastrar",
+    EDITAR: "Editar",
+    EXCLUIR: "Excluir",
+    CANCELAR: "Cancelar",
+  };
+
+  return nomes[acao] || acao;
+}
+
 function agruparPermissoes(permissoes) {
   const grupos = {};
 
   permissoes.forEach((permissao) => {
     const partes = permissao.nome.split("_");
 
-    const modulo = partes[0];
+    const modulo =
+      partes[0] === "TIPO" && partes[1] === "COBRANCA"
+        ? "TIPO_COBRANCA"
+        : partes[0];
 
     if (!grupos[modulo]) {
       grupos[modulo] = [];
@@ -197,7 +232,7 @@ function PerfilForm() {
               ([modulo, permissoesDoModulo]) => (
                 <div className="permission-group" key={modulo}>
                   <div className="permission-group-header">
-                    <strong>{modulo}</strong>
+                    <strong>{formatarModulo(modulo)}</strong>
 
                     <label className="select-all-permissions">
                       <input
@@ -217,9 +252,9 @@ function PerfilForm() {
 
                   <div className="permission-group-items">
                     {permissoesDoModulo.map((permissao) => {
-                      const acao = permissao.nome
-                        .replace(`${modulo}_`, "")
-                        .toLowerCase();
+                      const acao = permissao.nome.replace(`${modulo}_`, "");
+
+                      const acaoFormatada = formatarAcao(acao);
 
                       return (
                         <label key={permissao.id} className="permission-item">
@@ -232,7 +267,7 @@ function PerfilForm() {
                             disabled={salvando || perfilAdmin}
                           />
 
-                          <span>{acao}</span>
+                          <span>{acaoFormatada}</span>
                         </label>
                       );
                     })}

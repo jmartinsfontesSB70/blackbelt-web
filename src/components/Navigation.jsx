@@ -5,6 +5,8 @@ import MenuItem from "./MenuItem";
 import Permissao from "./Permissao";
 import ConfirmModal from "./ConfirmModal";
 
+import { consultarStatusLicenca } from "../services/licencaStatusService";
+
 function Navigation() {
   const navigate = useNavigate();
 
@@ -14,6 +16,21 @@ function Navigation() {
 
   const [modalSairAberto, setModalSairAberto] = useState(false);
   const [saindo, setSaindo] = useState(false);
+
+  const [statusLicenca, setStatusLicenca] = useState(null);
+
+  useEffect(() => {
+    async function carregarStatusLicenca() {
+      try {
+        const status = await consultarStatusLicenca();
+        setStatusLicenca(status);
+      } catch (error) {
+        console.error("Erro ao consultar status da licença:", error);
+      }
+    }
+
+    carregarStatusLicenca();
+  }, []);
 
   useEffect(() => {
     function tratarCliqueFora(event) {
@@ -132,12 +149,16 @@ function Navigation() {
               </Permissao>
             </MenuItem>
           </Permissao>
-        </div>
 
-        <div className="navigation-footer">
           <Link to="/alterar-senha" onClick={fecharMenu}>
             Alterar senha
           </Link>
+
+          <Permissao nome="ACADEMIA_EDITAR">
+            <Link to="/academia" onClick={fecharMenu}>
+              Dados da academia
+            </Link>
+          </Permissao>
 
           <button
             type="button"
@@ -147,6 +168,39 @@ function Navigation() {
             Sair
           </button>
         </div>
+
+        {statusLicenca && (
+          <div
+            className={`licenca-status licenca-${statusLicenca.situacao.toLowerCase()}`}
+          >
+            <strong>
+              {statusLicenca.situacao === "LICENCIADA"
+                ? "Licença comercial ativa"
+                : statusLicenca.situacao === "AVALIACAO"
+                  ? "Cópia de avaliação"
+                  : "Licença expirada"}
+            </strong>
+
+            {statusLicenca.dataExpiracao && (
+              <span>
+                Válida até{" "}
+                {new Date(
+                  `${statusLicenca.dataExpiracao}T12:00:00`,
+                ).toLocaleDateString("pt-BR")}
+              </span>
+            )}
+
+            <span>
+              {statusLicenca.situacao === "EXPIRADA"
+                ? "Acesso bloqueado"
+                : `${statusLicenca.diasRestantes} ${
+                    statusLicenca.diasRestantes === 1
+                      ? "dia restante"
+                      : "dias restantes"
+                  }`}
+            </span>
+          </div>
+        )}
       </nav>
 
       <ConfirmModal

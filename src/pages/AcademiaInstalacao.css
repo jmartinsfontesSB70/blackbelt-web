@@ -167,3 +167,25 @@
     gap: 0;
   }
 }
+
+.instalacao-preview-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.instalacao-preview-logo img {
+  display: block;
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+}
+
+.instalacao-button + .instalacao-button {
+  margin-top: 12px;
+}

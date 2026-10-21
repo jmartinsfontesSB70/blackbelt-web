@@ -161,10 +161,31 @@ body {
 
 .navigation {
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
   gap: 8px;
   padding: 16px 48px;
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border);
+  box-sizing: border-box;
+}
+
+.navigation-main {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.navigation-logout {
+  width: auto;
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .navigation a {
@@ -2558,12 +2579,6 @@ th .primary-button {
    Navigation
 ========================================= */
 
-.navigation {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
 .navigation-links {
   display: flex;
   flex-direction: column;
@@ -2575,6 +2590,24 @@ th .primary-button {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  align-items: stretch;
+}
+
+.navigation-footer-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  width: 100%;
+}
+
+.navigation-footer .licenca-status {
+  width: 100%;
+  box-sizing: border-box;
+  align-self: stretch;
+  text-align: left;
+  margin-top: 10px;
 }
 
 .navigation-group {
@@ -2625,7 +2658,9 @@ th .primary-button {
 }
 
 .navigation-logout {
-  width: 100%;
+  width: auto;
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .navigation-dropdown {
@@ -2686,13 +2721,6 @@ th .primary-button {
    MENU PRINCIPAL
    ========================================================= */
 
-.navigation {
-  display: flex;
-  flex-direction: column !important;
-  align-items: stretch;
-  width: 100%;
-}
-
 /* Primeira linha */
 .navigation-main {
   display: flex;
@@ -2702,6 +2730,14 @@ th .primary-button {
   gap: 4px;
   width: 100%;
   white-space: nowrap;
+}
+
+.navigation-footer {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  align-items: stretch;
+  text-align: left;
 }
 
 /* =========================================================
@@ -2797,12 +2833,20 @@ th .primary-button {
 
 .navigation-footer {
   display: flex;
-  flex-direction: row !important;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  flex-shrink: 0;
+  align-items: stretch;
+}
 
-  width: 100%;
-  margin-top: 8px;
+.navigation-footer .licenca-status {
+  align-self: stretch;
+  text-align: left;
+}
+
+.navigation-footer > a,
+.navigation-footer > .navigation-logout {
+  align-self: flex-end;
+  text-align: right;
 }
 
 .navigation-footer > a {
@@ -2826,6 +2870,8 @@ th .primary-button {
 
 .navigation-footer .navigation-logout {
   width: auto !important;
+  justify-content: flex-end;
+  text-align: right;
 
   margin: 0;
   padding: 0;
@@ -2833,7 +2879,11 @@ th .primary-button {
   display: inline-flex;
   align-items: center;
 
-  border: none !important;
+  width: 100% !important;
+  box-sizing: border-box;
+  text-align: left;
+  justify-content: flex-start;
+
   border-radius: 0;
 
   background: transparent !important;
@@ -3163,4 +3213,70 @@ th .primary-button {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.licenca-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  margin: 0 0 10px;
+  border: 1px solid #333333;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.licenca-status strong,
+.licenca-status span {
+  display: block;
+  max-width: 100%;
+}
+
+.licenca-licenciada {
+  color: #6ee7a0;
+}
+
+.licenca-avaliacao {
+  color: #fbbf24;
+}
+
+.licenca-expirada {
+  color: #f08a91;
+}
+
+/* PROFESSORES */
+
+.professores-table th:nth-child(1),
+.professores-table td:nth-child(1) {
+  width: 90px;
+}
+
+.professores-table th:nth-child(2),
+.professores-table td:nth-child(2) {
+  width: 45px;
+}
+
+/* HEADER USERNAME */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-username {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary, #777);
+  font-size: 13px;
+  font-weight: 400;
+  white-space: nowrap;
 }

@@ -8,6 +8,22 @@ import {
 
 import "./AcademiaInstalacao.css";
 
+function mascararCNPJ(valor) {
+  const numeros = valor.replace(/\D/g, "").slice(0, 14);
+
+  return numeros
+    .replace(/^(\d{2})(\d)/, "$1.$2")
+    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+    .replace(/\.(\d{3})(\d)/, ".$1/$2")
+    .replace(/(\d{4})(\d)/, "$1-$2");
+}
+
+function mascararCEP(valor) {
+  const numeros = valor.replace(/\D/g, "").slice(0, 8);
+
+  return numeros.replace(/^(\d{5})(\d)/, "$1-$2");
+}
+
 const enderecoInicial = {
   rua: "",
   numero: "",
@@ -33,6 +49,7 @@ function AcademiaInstalacao() {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState("");
   const [dataExpiracao, setDataExpiracao] = useState("");
+  const [previewLogo, setPreviewLogo] = useState("");
 
   useEffect(() => {
     async function verificarInstalacao() {
@@ -52,8 +69,34 @@ function AcademiaInstalacao() {
     verificarInstalacao();
   }, [navigate]);
 
+  function handleLogoChange(event) {
+    const arquivo = event.target.files?.[0] || null;
+
+    setLogo(arquivo);
+
+    if (previewLogo) {
+      URL.revokeObjectURL(previewLogo);
+    }
+
+    if (arquivo) {
+      setPreviewLogo(URL.createObjectURL(arquivo));
+    } else {
+      setPreviewLogo("");
+    }
+  }
+
   function handleChange(event) {
     const { name, value } = event.target;
+
+    let valorFormatado = value;
+
+    if (name === "cnpj") {
+      valorFormatado = mascararCNPJ(value);
+    }
+
+    if (name === "endereco.cep") {
+      valorFormatado = mascararCEP(value);
+    }
 
     if (name.startsWith("endereco.")) {
       const campo = name.split(".")[1];
@@ -62,7 +105,7 @@ function AcademiaInstalacao() {
         ...atual,
         endereco: {
           ...atual.endereco,
-          [campo]: value,
+          [campo]: valorFormatado,
         },
       }));
 
@@ -71,7 +114,7 @@ function AcademiaInstalacao() {
 
     setAcademia((atual) => ({
       ...atual,
-      [name]: value,
+      [name]: valorFormatado,
     }));
   }
 
@@ -81,8 +124,13 @@ function AcademiaInstalacao() {
     setErro("");
     setEnviando(true);
 
+    const academiaSemMascara = {
+      ...academia,
+      cnpj: academia.cnpj.replace(/\D/g, ""),
+    };
+
     try {
-      const resposta = await cadastrarAcademia(academia, logo);
+      const resposta = await cadastrarAcademia(academiaSemMascara, logo);
 
       setDataExpiracao(resposta.dataExpiracao || "");
     } catch (error) {
@@ -191,6 +239,7 @@ function AcademiaInstalacao() {
               value={academia.cnpj}
               onChange={handleChange}
               maxLength={18}
+              inputMode="numeric"
               placeholder="00.000.000/0000-00"
             />
           </div>
@@ -230,6 +279,8 @@ function AcademiaInstalacao() {
                 onChange={handleChange}
                 required
                 maxLength={9}
+                inputMode="numeric"
+                placeholder="00000-000"
                 autoComplete="postal-code"
               />
             </div>
@@ -291,13 +342,21 @@ function AcademiaInstalacao() {
 
           <div className="instalacao-campo">
             <label htmlFor="logo">Logotipo da academia (opcional)</label>
+
             <input
               id="logo"
               type="file"
               accept=".jpg,.jpeg,image/jpeg"
-              onChange={(event) => setLogo(event.target.files?.[0] || null)}
+              onChange={handleLogoChange}
             />
+
             <small>Formato JPG ou JPEG.</small>
+
+            {previewLogo && (
+              <div className="instalacao-preview-logo">
+                <img src={previewLogo} alt="Prévia do logotipo da academia" />
+              </div>
+            )}
           </div>
 
           {erro && (

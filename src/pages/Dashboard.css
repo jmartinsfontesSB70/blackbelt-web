@@ -1,0 +1,100 @@
+.dashboard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 0;
+  padding: 0;
+
+  overflow: hidden;
+
+  background-color: #111111;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.72)),
+    url("/images/dojo-blackbelt.jpg");
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.dashboard-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+  min-height: 450px;
+
+  padding: 32px;
+  text-align: center;
+}
+
+.dashboard-conteudo {
+  max-width: 800px;
+  color: #ffffff;
+}
+
+.dashboard-logo {
+  display: block;
+
+  width: 180px;
+  height: 180px;
+
+  margin: 0 auto 24px;
+
+  object-fit: contain;
+
+  filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.6));
+}
+
+.dashboard-conteudo h1 {
+  margin: 0;
+
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 800;
+
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8);
+}
+
+.dashboard-divisor {
+  width: 80px;
+  height: 4px;
+
+  margin: 24px auto;
+
+  background-color: #c1121f;
+  border-radius: 4px;
+}
+
+.dashboard-conteudo h2 {
+  margin: 0 0 16px;
+
+  font-size: clamp(20px, 2.5vw, 28px);
+  color: #ffffff;
+}
+
+.dashboard-conteudo p {
+  margin: 0;
+
+  font-size: 17px;
+  line-height: 1.7;
+  color: #dddddd;
+}
+
+@media (max-width: 768px) {
+  .dashboard-overlay {
+    padding: 24px;
+  }
+
+  .dashboard-logo {
+    width: 130px;
+    height: 130px;
+  }
+
+  .dashboard-conteudo p {
+    font-size: 15px;
+  }
+}
