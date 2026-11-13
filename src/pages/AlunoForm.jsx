@@ -6,6 +6,7 @@ import {
   enviarFotoAluno,
   buscarFotoAluno,
   excluirFotoAluno,
+  buscarEnderecoPorCep,
 } from "../services/alunoService";
 import HistoricoGraduacao from "../components/HistoricoGraduacao";
 import { useNavigate, useParams } from "react-router-dom";
@@ -73,8 +74,9 @@ function AlunoForm() {
     rua: "",
     numero: "",
     bairro: "",
+    cidadeId: "",
     cidade: "",
-    estado: "",
+    uf: "",
     cep: "",
     pontoReferencia: "",
   });
@@ -126,11 +128,42 @@ function AlunoForm() {
     }
   }
 
+  async function handleBuscarCep() {
+    const cepLimpo = endereco.cep.replace(/\D/g, "");
+
+    if (cepLimpo.length !== 8) {
+      return;
+    }
+
+    try {
+      setErro("");
+      setSucesso("");
+
+      const dados = await buscarEnderecoPorCep(cepLimpo);
+
+      setEndereco((anterior) => ({
+        ...anterior,
+        rua: dados.logradouro || "",
+        bairro: dados.bairro || "",
+        cidadeId: dados.cidadeId,
+        cidade: dados.cidade,
+        uf: dados.uf,
+      }));
+    } catch (error) {
+      setErro(error.message);
+    }
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     setErro("");
     setSucesso("");
+
+    if (!endereco.numero.trim()) {
+      setErro("O número do endereço é obrigatório.");
+      return;
+    }
 
     const aluno = {
       nome,
@@ -189,7 +222,8 @@ function AlunoForm() {
           numero: aluno.endereco.numero,
           bairro: aluno.endereco.bairro,
           cidade: aluno.endereco.cidade,
-          estado: aluno.endereco.estado,
+          cidadeId: aluno.endereco.cidadeId,
+          uf: aluno.endereco.uf,
           cep: aluno.endereco.cep,
           pontoReferencia: aluno.endereco.pontoReferencia,
         });
@@ -359,17 +393,39 @@ function AlunoForm() {
           </div>
 
           <div className="form-group">
+            <label>CEP</label>
+
+            <input
+              type="text"
+              value={endereco.cep}
+              onChange={(event) => {
+                const numeros = event.target.value
+                  .replace(/\D/g, "")
+                  .slice(0, 8);
+
+                let cepFormatado = numeros;
+
+                if (numeros.length > 5) {
+                  cepFormatado = numeros.slice(0, 5) + "-" + numeros.slice(5);
+                }
+
+                setEndereco((anterior) => ({
+                  ...anterior,
+                  cep: cepFormatado,
+                }));
+              }}
+              onBlur={handleBuscarCep}
+              placeholder="00000-000"
+            />
+          </div>
+
+          <div className="form-group">
             <label>Rua</label>
 
             <input
               type="text"
               value={endereco.rua}
-              onChange={(event) =>
-                setEndereco({
-                  ...endereco,
-                  rua: event.target.value,
-                })
-              }
+              readOnly
               placeholder="Digite a rua"
             />
           </div>
@@ -380,12 +436,13 @@ function AlunoForm() {
             <input
               type="text"
               value={endereco.numero}
-              onChange={(event) =>
-                setEndereco({
-                  ...endereco,
-                  numero: event.target.value,
-                })
-              }
+              onChange={(event) => {
+                const numero = event.target.value.replace(/\D/g, "");
+                setEndereco((anterior) => ({
+                  ...anterior,
+                  numero,
+                }));
+              }}
               placeholder="Número"
             />
           </div>
@@ -396,29 +453,8 @@ function AlunoForm() {
             <input
               type="text"
               value={endereco.bairro}
-              onChange={(event) =>
-                setEndereco({
-                  ...endereco,
-                  bairro: event.target.value,
-                })
-              }
+              readOnly
               placeholder="Digite o bairro"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>CEP</label>
-
-            <input
-              type="text"
-              value={endereco.cep}
-              onChange={(event) =>
-                setEndereco({
-                  ...endereco,
-                  cep: event.target.value,
-                })
-              }
-              placeholder="00000-000"
             />
           </div>
 
@@ -428,13 +464,8 @@ function AlunoForm() {
             <input
               type="text"
               value={endereco.cidade}
-              onChange={(event) =>
-                setEndereco({
-                  ...endereco,
-                  cidade: event.target.value,
-                })
-              }
-              placeholder="Digite a cidade"
+              readOnly
+              placeholder="Cidade"
             />
           </div>
 
@@ -443,13 +474,8 @@ function AlunoForm() {
 
             <input
               type="text"
-              value={endereco.estado}
-              onChange={(event) =>
-                setEndereco({
-                  ...endereco,
-                  estado: event.target.value,
-                })
-              }
+              value={endereco.uf}
+              readOnly
               placeholder="UF"
               maxLength="2"
             />

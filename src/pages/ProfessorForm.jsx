@@ -7,6 +7,7 @@ import {
   buscarFotoProfessor,
   excluirFotoProfessor,
 } from "../services/professorService";
+import { buscarEnderecoPorCep } from "../services/alunoService";
 import { useNavigate, useParams } from "react-router-dom";
 
 function formatarCpf(valor) {
@@ -75,8 +76,9 @@ function ProfessorForm() {
     rua: "",
     numero: "",
     bairro: "",
+    cidadeId: "",
     cidade: "",
-    estado: "",
+    uf: "",
     cep: "",
     pontoReferencia: "",
   });
@@ -138,6 +140,32 @@ function ProfessorForm() {
     }
   }
 
+  async function handleBuscarCep() {
+    const cepLimpo = endereco.cep.replace(/\D/g, "");
+
+    if (cepLimpo.length !== 8) {
+      return;
+    }
+
+    try {
+      setErro("");
+      setSucesso("");
+
+      const dados = await buscarEnderecoPorCep(cepLimpo);
+
+      setEndereco((anterior) => ({
+        ...anterior,
+        rua: dados.logradouro || "",
+        bairro: dados.bairro || "",
+        cidadeId: dados.cidadeId,
+        cidade: dados.cidade,
+        uf: dados.uf,
+      }));
+    } catch (error) {
+      setErro(error.message);
+    }
+  }
+
   // =========================
   // CARREGAR PROFESSOR
   // =========================
@@ -164,8 +192,9 @@ function ProfessorForm() {
           rua: professor.endereco.rua,
           numero: professor.endereco.numero,
           bairro: professor.endereco.bairro,
+          cidadeId: professor.endereco.cidadeId,
           cidade: professor.endereco.cidade,
-          estado: professor.endereco.estado,
+          uf: professor.endereco.uf,
           cep: professor.endereco.cep,
           pontoReferencia: professor.endereco.pontoReferencia,
         });
@@ -219,6 +248,11 @@ function ProfessorForm() {
 
     setErro("");
     setSucesso("");
+
+    if (!endereco.numero.trim()) {
+      setErro("O número do endereço é obrigatório.");
+      return;
+    }
 
     const professor = {
       nome,
@@ -445,18 +479,40 @@ function ProfessorForm() {
           </div>
 
           <div className="form-group">
+            <label>CEP</label>
+
+            <input
+              type="text"
+              value={endereco.cep}
+              onChange={(event) => {
+                const numeros = event.target.value
+                  .replace(/\D/g, "")
+                  .slice(0, 8);
+
+                let cepFormatado = numeros;
+
+                if (numeros.length > 5) {
+                  cepFormatado = numeros.slice(0, 5) + "-" + numeros.slice(5);
+                }
+
+                setEndereco((anterior) => ({
+                  ...anterior,
+                  cep: cepFormatado,
+                }));
+              }}
+              onBlur={handleBuscarCep}
+              placeholder="00000-000"
+            />
+          </div>
+
+          <div className="form-group">
             <label>Rua</label>
 
             <input
               type="text"
               value={endereco.rua}
-              onChange={(event) =>
-                setEndereco({
-                  ...endereco,
-                  rua: event.target.value,
-                })
-              }
-              placeholder="Digite a rua"
+              readOnly
+              placeholder="Rua"
             />
           </div>
 
@@ -466,12 +522,13 @@ function ProfessorForm() {
             <input
               type="text"
               value={endereco.numero}
-              onChange={(event) =>
-                setEndereco({
-                  ...endereco,
-                  numero: event.target.value,
-                })
-              }
+              onChange={(event) => {
+                const numero = event.target.value.replace(/\D/g, "");
+                setEndereco((anterior) => ({
+                  ...anterior,
+                  numero,
+                }));
+              }}
               placeholder="Número"
             />
           </div>
@@ -482,29 +539,8 @@ function ProfessorForm() {
             <input
               type="text"
               value={endereco.bairro}
-              onChange={(event) =>
-                setEndereco({
-                  ...endereco,
-                  bairro: event.target.value,
-                })
-              }
-              placeholder="Digite o bairro"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>CEP</label>
-
-            <input
-              type="text"
-              value={endereco.cep}
-              onChange={(event) =>
-                setEndereco({
-                  ...endereco,
-                  cep: event.target.value,
-                })
-              }
-              placeholder="00000-000"
+              readOnly
+              placeholder="Bairro"
             />
           </div>
 
@@ -514,13 +550,8 @@ function ProfessorForm() {
             <input
               type="text"
               value={endereco.cidade}
-              onChange={(event) =>
-                setEndereco({
-                  ...endereco,
-                  cidade: event.target.value,
-                })
-              }
-              placeholder="Digite a cidade"
+              readOnly
+              placeholder="Cidade"
             />
           </div>
 
@@ -529,13 +560,8 @@ function ProfessorForm() {
 
             <input
               type="text"
-              value={endereco.estado}
-              onChange={(event) =>
-                setEndereco({
-                  ...endereco,
-                  estado: event.target.value,
-                })
-              }
+              value={endereco.uf}
+              readOnly
               placeholder="UF"
               maxLength="2"
             />

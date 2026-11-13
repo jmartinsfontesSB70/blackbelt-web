@@ -6,6 +6,8 @@ import {
   cadastrarAcademia,
 } from "../services/academiaService";
 
+import { buscarEnderecoPorCep } from "../services/alunoService";
+
 import "./AcademiaInstalacao.css";
 
 function mascararCNPJ(valor) {
@@ -28,6 +30,7 @@ const enderecoInicial = {
   rua: "",
   numero: "",
   bairro: "",
+  cidadeId: "",
   cidade: "",
   estado: "",
   cep: "",
@@ -82,6 +85,32 @@ function AcademiaInstalacao() {
       setPreviewLogo(URL.createObjectURL(arquivo));
     } else {
       setPreviewLogo("");
+    }
+  }
+
+  async function handleBuscarCep() {
+    const cepLimpo = academia.endereco.cep.replace(/\D/g, "");
+
+    if (cepLimpo.length !== 8) return;
+
+    try {
+      setErro("");
+
+      const dados = await buscarEnderecoPorCep(cepLimpo);
+
+      setAcademia((atual) => ({
+        ...atual,
+        endereco: {
+          ...atual.endereco,
+          rua: dados.logradouro || "",
+          bairro: dados.bairro || "",
+          cidadeId: dados.cidadeId || "",
+          cidade: dados.cidade || "",
+          estado: dados.uf || "",
+        },
+      }));
+    } catch (error) {
+      setErro(error.message || "Não foi possível localizar esse CEP.");
     }
   }
 
@@ -247,11 +276,28 @@ function AcademiaInstalacao() {
           <h2>Endereço</h2>
 
           <div className="instalacao-campo">
+            <label htmlFor="cep">CEP *</label>
+            <input
+              id="cep"
+              name="endereco.cep"
+              value={academia.endereco.cep}
+              onChange={handleChange}
+              onBlur={handleBuscarCep}
+              required
+              maxLength={9}
+              inputMode="numeric"
+              placeholder="00000-000"
+              autoComplete="postal-code"
+            />
+          </div>
+
+          <div className="instalacao-campo">
             <label htmlFor="rua">Rua *</label>
             <input
               id="rua"
               name="endereco.rua"
               value={academia.endereco.rua}
+              readOnly
               onChange={handleChange}
               required
               autoComplete="address-line1"
@@ -269,21 +315,6 @@ function AcademiaInstalacao() {
                 required
               />
             </div>
-
-            <div className="instalacao-campo">
-              <label htmlFor="cep">CEP *</label>
-              <input
-                id="cep"
-                name="endereco.cep"
-                value={academia.endereco.cep}
-                onChange={handleChange}
-                required
-                maxLength={9}
-                inputMode="numeric"
-                placeholder="00000-000"
-                autoComplete="postal-code"
-              />
-            </div>
           </div>
 
           <div className="instalacao-campo">
@@ -292,6 +323,7 @@ function AcademiaInstalacao() {
               id="bairro"
               name="endereco.bairro"
               value={academia.endereco.bairro}
+              readOnly
               onChange={handleChange}
               required
               autoComplete="address-level3"
@@ -305,6 +337,7 @@ function AcademiaInstalacao() {
                 id="cidade"
                 name="endereco.cidade"
                 value={academia.endereco.cidade}
+                readOnly
                 onChange={handleChange}
                 required
                 autoComplete="address-level2"
@@ -317,6 +350,7 @@ function AcademiaInstalacao() {
                 id="estado"
                 name="endereco.estado"
                 value={academia.endereco.estado}
+                readOnly
                 onChange={handleChange}
                 required
                 maxLength={2}

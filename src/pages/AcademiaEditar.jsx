@@ -9,6 +9,8 @@ import {
   atualizarLogoAcademia,
 } from "../services/academiaService";
 
+import { buscarEnderecoPorCep } from "../services/alunoService";
+
 import "./AcademiaInstalacao.css";
 
 function mascararCNPJ(valor = "") {
@@ -46,8 +48,9 @@ function AcademiaEditar() {
       rua: "",
       numero: "",
       bairro: "",
+      cidadeId: "",
       cidade: "",
-      estado: "",
+      uf: "",
       cep: "",
       pontoReferencia: "",
     },
@@ -81,8 +84,9 @@ function AcademiaEditar() {
             rua: resposta.endereco?.rua ?? "",
             numero: resposta.endereco?.numero ?? "",
             bairro: resposta.endereco?.bairro ?? "",
+            cidadeId: resposta.endereco?.cidadeId ?? "",
             cidade: resposta.endereco?.cidade ?? "",
-            estado: resposta.endereco?.estado ?? "",
+            uf: resposta.endereco?.uf ?? "",
             cep: mascararCEP(resposta.endereco?.cep ?? ""),
             pontoReferencia: resposta.endereco?.pontoReferencia ?? "",
           },
@@ -134,8 +138,48 @@ function AcademiaEditar() {
     };
   }, []);
 
+  async function handleBuscarCep() {
+    const cepLimpo = academia.endereco.cep.replace(/\D/g, "");
+
+    if (cepLimpo.length !== 8) return;
+
+    try {
+      setErro("");
+
+      const dados = await buscarEnderecoPorCep(cepLimpo);
+
+      setAcademia((atual) => ({
+        ...atual,
+        endereco: {
+          ...atual.endereco,
+          rua: dados.logradouro || "",
+          bairro: dados.bairro || "",
+          cidadeId: dados.cidadeId || "",
+          cidade: dados.cidade || "",
+          uf: dados.uf || "",
+        },
+      }));
+    } catch (error) {
+      setErro(error.message || "Não foi possível localizar esse CEP.");
+    }
+  }
+
   function handleChange(event) {
     const { name, value } = event.target;
+
+    if (name === "endereco.numero") {
+      const numero = value.replace(/\D/g, "");
+
+      setAcademia((atual) => ({
+        ...atual,
+        endereco: {
+          ...atual.endereco,
+          numero,
+        },
+      }));
+
+      return;
+    }
 
     let valorFormatado = value;
 
@@ -201,6 +245,11 @@ function AcademiaEditar() {
     setErro("");
     setSucesso("");
     setEnviando(true);
+
+    if (!academia.endereco.numero.trim()) {
+      setErro("O número do endereço é obrigatório.");
+      return;
+    }
 
     try {
       const academiaSemMascara = {
@@ -295,11 +344,29 @@ function AcademiaEditar() {
           <h2>Endereço</h2>
 
           <div className="instalacao-campo">
+            <label htmlFor="cep">CEP *</label>
+            <input
+              id="cep"
+              name="endereco.cep"
+              value={academia.endereco.cep}
+              onChange={handleChange}
+              onBlur={handleBuscarCep}
+              required
+              maxLength={9}
+              inputMode="numeric"
+              placeholder="00000-000"
+              autoComplete="postal-code"
+              disabled={enviando}
+            />
+          </div>
+
+          <div className="instalacao-campo">
             <label htmlFor="rua">Rua *</label>
             <input
               id="rua"
               name="endereco.rua"
               value={academia.endereco.rua}
+              readOnly
               onChange={handleChange}
               required
               autoComplete="address-line1"
@@ -319,22 +386,6 @@ function AcademiaEditar() {
                 disabled={enviando}
               />
             </div>
-
-            <div className="instalacao-campo">
-              <label htmlFor="cep">CEP *</label>
-              <input
-                id="cep"
-                name="endereco.cep"
-                value={academia.endereco.cep}
-                onChange={handleChange}
-                required
-                maxLength={9}
-                inputMode="numeric"
-                placeholder="00000-000"
-                autoComplete="postal-code"
-                disabled={enviando}
-              />
-            </div>
           </div>
 
           <div className="instalacao-campo">
@@ -343,6 +394,7 @@ function AcademiaEditar() {
               id="bairro"
               name="endereco.bairro"
               value={academia.endereco.bairro}
+              readOnly
               onChange={handleChange}
               required
               autoComplete="address-level3"
@@ -357,7 +409,7 @@ function AcademiaEditar() {
                 id="cidade"
                 name="endereco.cidade"
                 value={academia.endereco.cidade}
-                onChange={handleChange}
+                readOnly
                 required
                 autoComplete="address-level2"
                 disabled={enviando}
@@ -368,9 +420,9 @@ function AcademiaEditar() {
               <label htmlFor="estado">Estado *</label>
               <input
                 id="estado"
-                name="endereco.estado"
-                value={academia.endereco.estado}
-                onChange={handleChange}
+                name="endereco.uf"
+                value={academia.endereco.uf}
+                readOnly
                 required
                 maxLength={2}
                 placeholder="BA"

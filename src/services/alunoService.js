@@ -2,6 +2,12 @@ import { apiFetch } from "./api";
 
 const API_URL = "/alunos";
 
+export async function buscarEnderecoPorCep(cep) {
+  const cepLimpo = cep.replace(/\D/g, "");
+
+  return await apiFetch(`/ceps/${cepLimpo}`);
+}
+
 export async function listarAlunos(
   page = 0,
   size = 10,
